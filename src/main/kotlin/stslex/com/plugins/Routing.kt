@@ -12,6 +12,9 @@ fun Application.configureRouting() {
         get("/api/v1/hello") {
             call.respond(HelloRequest("hello"))
         }
+        get("/api/v1/test-deploy") {
+            call.respond(HelloRequest("test-deploy"))
+        }
         get("/api/v1/hello-naum") {
             call.respond(HelloRequest("hello Naum!!"))
         }
