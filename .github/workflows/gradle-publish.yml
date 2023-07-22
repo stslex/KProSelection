@@ -48,7 +48,7 @@ jobs:
           platforms: linux/amd64
 
       - name: Install SSH Key
-        uses: Marcanta/setup-ssh-keys@master
+        uses: Marcanta/setup-ssh-keys@v1.0.2
         with: 
           params: ${{ secrets.SERVER_SSH }}
         
