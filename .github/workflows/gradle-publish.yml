@@ -48,10 +48,11 @@ jobs:
           platforms: linux/amd64
 
       - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: { %- raw -% } ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+        uses: Marcanta/setup-ssh-keys@master
+        with: 
+          params: ${{ secrets.SERVER_SSH }}
+        
+      - name: Server run docker
         run: |
           docker pull stslex/kproselection
           docker run -d -p 8080:8080 --restart always stslex/kproselection
