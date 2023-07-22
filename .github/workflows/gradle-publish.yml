@@ -51,6 +51,9 @@ jobs:
         uses: Marcanta/setup-ssh-keys@v1.0.2
         with: 
           params: ${{ secrets.SERVER_SSH }}
+      
+      - name: Connect to server
+        run: ssh stslex@${{ secrets.SERVER_HOST }}
         
       - name: Server run docker
         run: |
