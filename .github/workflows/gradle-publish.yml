@@ -1,8 +1,6 @@
-name: Android Build
+name: Server Deploy
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -48,10 +46,14 @@ jobs:
           platforms: linux/amd64
 
       - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: { %- raw -% } ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+        uses: Marcanta/setup-ssh-keys@v1.0.2
+        with: 
+          params: ${{ secrets.SERVER_SSH }}
+      
+      - name: Connect to server
+        run: ssh stslex@${{ secrets.SERVER_HOST }}
+        
+      - name: Server run docker
         run: |
           docker pull stslex/kproselection
           docker run -d -p 8080:8080 --restart always stslex/kproselection
