@@ -1,4 +1,4 @@
-name: Server Start
+name: Server Deploy MASTER
 
 on:
   push:
