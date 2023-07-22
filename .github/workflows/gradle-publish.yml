@@ -51,9 +51,4 @@ jobs:
           params: ${{ secrets.SERVER_SSH }}
       
       - name: Connect to server
-        run: ssh stslex@${{ secrets.SERVER_HOST }}
-        
-      - name: Server run docker
-        run: |
-          docker pull stslex/kproselection
-          docker run -d -p 8080:8080 --restart always stslex/kproselection
+        run: ssh stslex@${{ secrets.SERVER_HOST }} "docker pull stslex/kproselection && docker run -d -p 8080:8080 --restart always stslex/kproselection"
