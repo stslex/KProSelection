@@ -9,13 +9,22 @@ import kotlinx.serialization.Serializable
 
 fun Application.configureRouting() {
     routing {
+        get("/api/v1/hello") {
+            call.respond(HelloRequest("hello"))
+        }
         authenticate {
-            get("/api/v1/hello") {
-                call.respond(HelloRequest("hello"))
+            get("/api/v1/testUser") {
+                call.respond(TestUser("Alex"))
             }
         }
     }
 }
+
+@Serializable
+data class TestUser(
+    @SerialName("username")
+    val username: String
+)
 
 @Serializable
 data class HelloRequest(
