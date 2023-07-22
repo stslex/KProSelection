@@ -1,7 +1,7 @@
-name: Server Deploy MASTER
+name: Server Deploy DEV
 
 on:
-  push:
+  pull_request:
     branches: [ master ]
   workflow_dispatch:
 
@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v4.1.1
         with:
           push: true
-          tags: stslex/kproselection:latest
+          tags: stslex/kproselection:test
           platforms: linux/amd64
 
       - name: SSH Command
@@ -55,4 +55,5 @@ jobs:
           script: |
             docker pull stslex/kproselection
             docker kill $(docker ps -q)
-            docker run -d -p 8080:8080 --restart always stslex/kproselection
+            docker run -d -p 80:8080 --restart always stslex/kproselection:latest
+            docker run -d -p 8080:8080 --restart always stslex/kproselection:test
