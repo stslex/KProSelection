@@ -12,6 +12,9 @@ fun Application.configureRouting() {
         get("/api/v1/hello") {
             call.respond(HelloRequest("hello"))
         }
+        get("/api/v1/hello-naum") {
+            call.respond(HelloRequest("hello Naum!!"))
+        }
         authenticate {
             get("/api/v1/testUser") {
                 call.respond(TestUser("Alex"))

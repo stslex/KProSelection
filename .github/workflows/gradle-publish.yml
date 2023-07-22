@@ -45,4 +45,4 @@ jobs:
         with:
           push: true
           tags: stslex/kproselection:latest
-        
+          platforms: linux/amd64
