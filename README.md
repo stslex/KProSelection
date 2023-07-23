@@ -1,4 +1,4 @@
 # KProSelection
-[![Deployed Dev CI](https://github.com/stslex/KProSelection/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/stslex/KProSelection/actions/workflows/gradle-publish.yml)
+[![Deployed Test CI](https://github.com/stslex/KProSelection/actions/workflows/test-deploy.yml/badge.svg)](https://github.com/stslex/KProSelection/actions/workflows/test-deploy.yml)
 
-[![Deployed Master CI](https://github.com/stslex/KProSelection/actions/workflows/server-start.yml/badge.svg)](https://github.com/stslex/KProSelection/actions/workflows/server-start.yml)
+[![Deployed Prod CI](https://github.com/stslex/KProSelection/actions/workflows/prod-deploy.yml/badge.svg)](https://github.com/stslex/KProSelection/actions/workflows/prod-deploy.yml)
