@@ -53,7 +53,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           key: ${{ secrets.SERVER_SSH }}
           script: |
-            docker pull stslex/kproselection
+            docker pull stslex/kproselection:test
             docker kill $(docker ps -q)
             docker run -d -p 80:8080 --restart always stslex/kproselection:latest
             docker run -d -p 8080:8080 --restart always stslex/kproselection:test

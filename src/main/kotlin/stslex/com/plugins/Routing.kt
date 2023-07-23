@@ -10,13 +10,13 @@ import kotlinx.serialization.Serializable
 fun Application.configureRouting() {
     routing {
         get("/api/v1/hello") {
-            call.respond(HelloRequest("hello"))
+            call.respond(HelloResponse("hello"))
         }
-        get("/api/v1/test-deploy2") {
-            call.respond(HelloRequest("test-deploy!"))
-        }
-        get("/api/v1/hello-naum") {
-            call.respond(HelloRequest("hello Naum!!"))
+        get("/api/v1/hello/{username}") {
+            val username = call.parameters["username"].orEmpty()
+            val helloText = "hello $username"
+            val response = HelloResponse(helloText)
+            call.respond(response)
         }
         authenticate {
             get("/api/v1/testUser") {
@@ -33,7 +33,7 @@ data class TestUser(
 )
 
 @Serializable
-data class HelloRequest(
+data class HelloResponse(
     @SerialName("text")
     val hello: String
 )
