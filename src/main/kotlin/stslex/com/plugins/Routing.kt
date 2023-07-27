@@ -10,9 +10,10 @@ import kotlinx.serialization.Serializable
 import java.io.File
 
 fun Application.configureRouting() {
+    val html = getIndexString()
     routing {
         get("") {
-            val currentHtml = getIndexString()
+            val currentHtml = html.ifBlank { getIndexString() }
             call.respondText(currentHtml, ContentType.Text.Html)
         }
         get("/api/v1/hello") {
