@@ -1,14 +1,20 @@
 package stslex.com.plugins
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.io.File
 
 fun Application.configureRouting() {
+    val html = File("site/index.html").readText()
     routing {
+        get("") {
+            call.respondText(html, ContentType.Text.Html)
+        }
         get("/api/v1/hello") {
             call.respond(HelloResponse("hello"))
         }
