@@ -6,6 +6,7 @@ import io.ktor.server.netty.*
 import stslex.com.plugins.configureAuthentication
 import stslex.com.plugins.configureRouting
 import stslex.com.plugins.configureSerialization
+import stslex.com.plugins.configureTemplating
 
 fun main() {
     embeddedServer(
@@ -20,5 +21,6 @@ fun main() {
 fun Application.module() {
     configureSerialization()
     configureAuthentication()
+    configureTemplating()
     configureRouting()
 }

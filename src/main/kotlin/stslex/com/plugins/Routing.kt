@@ -1,8 +1,8 @@
 package stslex.com.plugins
 
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerialName
@@ -10,12 +10,12 @@ import kotlinx.serialization.Serializable
 import java.io.File
 
 fun Application.configureRouting() {
-    val html = getIndexString()
     routing {
-        get("") {
-            val currentHtml = html.ifBlank { getIndexString() }
-            call.respondText(currentHtml, ContentType.Text.Html)
-        }
+        staticFiles(
+            remotePath = "",
+            dir = File("site"),
+            index = "index.html"
+        )
         get("/api/v1/hello") {
             call.respond(HelloResponse("hello"))
         }
@@ -31,12 +31,6 @@ fun Application.configureRouting() {
             }
         }
     }
-}
-
-private fun getIndexString(): String = try {
-    File("site/index.html").readText()
-} catch (exception: Exception) {
-    ""
 }
 
 @Serializable
