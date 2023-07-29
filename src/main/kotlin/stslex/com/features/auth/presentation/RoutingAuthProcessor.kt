@@ -53,6 +53,34 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processAuth(
     }
 }
 
+suspend inline fun PipelineContext<Unit, ApplicationCall>.processTokenGenerate(
+    apiKey: String?,
+    deviceId: String?,
+    uuid: String?,
+    crossinline getUser: suspend (uuid: String) -> UserAuthModel?
+) {
+    if (uuid == null) {
+        processUnAuthToken(
+            apiKey = apiKey,
+            deviceId = deviceId
+        )
+    } else {
+        val user = getUser(uuid)
+        if (user != null) {
+            processAuthToken(
+                apiKey = apiKey,
+                deviceId = deviceId,
+                user = user
+            )
+        } else {
+            processUnAuthToken(
+                apiKey = apiKey,
+                deviceId = deviceId
+            )
+        }
+    }
+}
+
 suspend fun PipelineContext<Unit, ApplicationCall>.processUnAuthToken(
     apiKey: String?,
     deviceId: String?
@@ -116,4 +144,3 @@ suspend inline fun ApplicationCall.processApiDeviceValidation(
     }
     return success(apiKey, deviceId)
 }
-
