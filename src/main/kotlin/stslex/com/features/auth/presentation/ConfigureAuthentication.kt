@@ -66,7 +66,10 @@ fun Application.configureAuthentication() {
 
 
     routing {
-        authenticate("jwt.token") {
+        authenticate(
+            "jwt.token",
+            "jwt.token.auth"
+        ) {
             post("${RoutingExt.API_HOST}/passport/register") {
                 val user = call.receive<UserAuthModel>()
                 val result = interactor.register(user)
@@ -78,39 +81,15 @@ fun Application.configureAuthentication() {
                 val result = interactor.auth(user)
                 processAuth(result)
             }
-
-            get("${RoutingExt.API_HOST}/passport/token") {
-                val user = call.receive<UserAuthModel>()
-                val token = JwtConfig.generateToken(user)
-                val response = TokenResponse(token)
-                call.respond(response)
-            }
         }
 
         get("${RoutingExt.API_HOST}/token") {
-            val uuid = call.request.header("uuid")
-            val apiKey = call.request.header(API_KEY_HEADER)
-            val deviceId = call.request.header(DEVICE_ID_HEADER)
-            if (uuid == null) {
-                processUnAuthToken(
-                    apiKey = apiKey,
-                    deviceId = deviceId
-                )
-            } else {
-                val user = interactor.getUser(uuid)
-                if (user != null) {
-                    processAuthToken(
-                        apiKey = apiKey,
-                        deviceId = deviceId,
-                        user = user
-                    )
-                } else {
-                    processUnAuthToken(
-                        apiKey = apiKey,
-                        deviceId = deviceId
-                    )
-                }
-            }
+            processTokenGenerate(
+                apiKey = call.request.header(API_KEY_HEADER),
+                deviceId = call.request.header(DEVICE_ID_HEADER),
+                uuid = call.request.header("uuid"),
+                getUser = interactor::getUser
+            )
         }
 
         authenticate("jwt.token") {
