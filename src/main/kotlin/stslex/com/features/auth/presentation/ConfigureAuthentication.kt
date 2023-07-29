@@ -23,9 +23,7 @@ import stslex.com.routing.RoutingExt
 
 fun Application.configureAuthentication() {
     val interactor by inject<AuthInteractor>()
-    CoroutineScope(SupervisorJob()).launch {
-        interactor.clearAll()
-    }
+
     install(Authentication) {
         jwt("jwt.token.auth") {
             verifier(JwtConfig.verifierAuth)
