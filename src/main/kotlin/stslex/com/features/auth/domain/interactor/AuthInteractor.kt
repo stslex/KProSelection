@@ -12,4 +12,8 @@ interface AuthInteractor {
     suspend fun auth(user: UserAuthModel): AuthResult
 
     suspend fun getAll(): List<UserDomainModel>
+
+    suspend fun getUser(uuid: String): UserAuthModel?
+
+    suspend fun clearAll()
 }

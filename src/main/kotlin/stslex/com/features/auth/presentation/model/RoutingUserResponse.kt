@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RoutingUserResponse(
     @SerialName("uuid")
-    val uuid: Int,
+    val uuid: String,
     @SerialName("username")
     val username: String,
     @SerialName("nickname")
@@ -18,7 +18,7 @@ data class RoutingUserResponse(
     companion object {
 
         val DEFAULT = RoutingUserResponse(
-            uuid = -1,
+            uuid = "",
             username = "",
             nickname = "",
             token = ""

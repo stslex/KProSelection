@@ -1,6 +1,7 @@
 package stslex.com.features.auth.domain.interactor
 
 import stslex.com.features.auth.data.repository.UserRepository
+import stslex.com.features.auth.domain.model.AuthUserMapper.toAuth
 import stslex.com.features.auth.domain.model.AuthUserMapper.toDomain
 import stslex.com.features.auth.domain.model.AuthUserMapper.toResponse
 import stslex.com.features.auth.domain.model.UserAuthModel
@@ -52,5 +53,11 @@ class AuthInteractorImpl(
         return AuthResult.Success(response)
     }
 
+    override suspend fun getUser(uuid: String): UserAuthModel? = repository.getUserByUuid(uuid)?.toAuth()
+
     override suspend fun getAll(): List<UserDomainModel> = repository.getAll().toDomain()
+
+    override suspend fun clearAll() {
+        repository.clearAll()
+    }
 }

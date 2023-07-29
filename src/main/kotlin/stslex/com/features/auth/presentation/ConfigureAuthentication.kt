@@ -7,19 +7,25 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.koin.ktor.ext.inject
 import stslex.com.features.auth.domain.interactor.AuthInteractor
 import stslex.com.features.auth.domain.model.TokenUnAuthModel
 import stslex.com.features.auth.domain.model.UserAuthModel
 import stslex.com.features.auth.presentation.model.TokenResponse
-import stslex.com.features.auth.utils.ApiConfig.API_KEY_HEADER
-import stslex.com.features.auth.utils.ApiConfig.DEVICE_ID_HEADER
-import stslex.com.features.auth.utils.ApiConfig.verifierUnAuth
 import stslex.com.features.auth.utils.JwtConfig
+import stslex.com.features.auth.utils.JwtUnAuthConfig.API_KEY_HEADER
+import stslex.com.features.auth.utils.JwtUnAuthConfig.DEVICE_ID_HEADER
+import stslex.com.features.auth.utils.JwtUnAuthConfig.verifierUnAuth
 import stslex.com.routing.RoutingExt
 
 fun Application.configureAuthentication() {
     val interactor by inject<AuthInteractor>()
+    CoroutineScope(SupervisorJob()).launch {
+        interactor.clearAll()
+    }
     install(Authentication) {
         jwt("jwt.token.auth") {
             verifier(JwtConfig.verifierAuth)
@@ -84,10 +90,29 @@ fun Application.configureAuthentication() {
         }
 
         get("${RoutingExt.API_HOST}/token") {
-            processUnAuthToken(
-                apiKey = call.request.header(API_KEY_HEADER),
-                call.request.header(DEVICE_ID_HEADER)
-            )
+            val uuid = call.request.header("uuid")
+            val apiKey = call.request.header(API_KEY_HEADER)
+            val deviceId = call.request.header(DEVICE_ID_HEADER)
+            if (uuid == null) {
+                processUnAuthToken(
+                    apiKey = apiKey,
+                    deviceId = deviceId
+                )
+            } else {
+                val user = interactor.getUser(uuid)
+                if (user != null) {
+                    processAuthToken(
+                        apiKey = apiKey,
+                        deviceId = deviceId,
+                        user = user
+                    )
+                } else {
+                    processUnAuthToken(
+                        apiKey = apiKey,
+                        deviceId = deviceId
+                    )
+                }
+            }
         }
 
         authenticate("jwt.token") {

@@ -8,7 +8,7 @@ import java.util.*
 
 object JwtConfig {
 
-    private const val SECRET = "test_secret" // TODO change to property
+    private const val SECRET = "F3YIwamJn9yJqUHj" // TODO change to property
     private const val ISSUER = "token is invalid"
     private const val VALIDITY_IN_MS = 36_000_00 * 24 // 1 day
     private val algorithm = Algorithm.HMAC512(SECRET)

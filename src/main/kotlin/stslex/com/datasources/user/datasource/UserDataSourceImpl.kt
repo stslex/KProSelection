@@ -7,6 +7,7 @@ import stslex.com.datasources.user.model.UserEntity
 import stslex.com.datasources.user.table.DatabaseFactory.dbQuery
 import stslex.com.datasources.user.table.UserEntitiesTable
 import stslex.com.features.auth.domain.model.UserAuthModel
+import java.util.*
 
 class UserDataSourceImpl : UserDataSource {
 
@@ -41,6 +42,17 @@ class UserDataSourceImpl : UserDataSource {
         UserEntitiesTable
             .select {
                 UserEntitiesTable.username eq username
+            }
+            .firstOrNull()
+            ?.toData()
+    }
+
+    override suspend fun getUserByUuid(
+        uuid: String
+    ): UserEntity? = dbQuery {
+        UserEntitiesTable
+            .select {
+                UserEntitiesTable.uuid eq UUID.fromString(uuid)
             }
             .firstOrNull()
             ?.toData()
