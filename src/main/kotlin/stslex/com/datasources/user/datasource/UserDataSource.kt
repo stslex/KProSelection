@@ -11,6 +11,8 @@ interface UserDataSource {
 
     suspend fun getUser(username: String): UserEntity?
 
+    suspend fun getUserByUuid(uuid: String): UserEntity?
+
     suspend fun getAll(): List<UserEntity>
 
     suspend fun clearAll()

@@ -11,5 +11,9 @@ interface UserRepository {
 
     suspend fun getUser(username: String): UserDataModel?
 
+    suspend fun getUserByUuid(uuid: String): UserDataModel?
+
     suspend fun getAll(): List<UserDataModel>
+
+    suspend fun clearAll()
 }

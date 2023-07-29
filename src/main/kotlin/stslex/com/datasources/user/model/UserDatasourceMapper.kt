@@ -12,7 +12,7 @@ object UserDatasourceMapper {
     fun Query.toData(): List<UserEntity> = map { it.toData() }
 
     fun ResultRow.toData(): UserEntity = UserEntity(
-        uuid = this[uuid],
+        uuid = this[uuid].toString(),
         username = this[username],
         nickname = this[nickname],
         password = this[password]

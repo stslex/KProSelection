@@ -14,6 +14,11 @@ object AuthUserMapper {
         token = token
     )
 
+    fun UserDataModel.toAuth(): UserAuthModel = UserAuthModel(
+        username = username,
+        password = password
+    )
+
     fun List<UserDataModel>.toDomain(): List<UserDomainModel> = map {
         it.toDomain()
     }

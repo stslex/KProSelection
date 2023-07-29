@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 
 data class UserDataModel(
     @SerialName("uuid")
-    val uuid: Int,
+    val uuid: String,
     @SerialName("password")
     val password: String,
     @SerialName("username")

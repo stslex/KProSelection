@@ -5,11 +5,13 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
+import stslex.com.features.auth.domain.model.UserAuthModel
 import stslex.com.features.auth.domain.result.AuthResult
 import stslex.com.features.auth.domain.result.RegisterResult
 import stslex.com.features.auth.presentation.model.RoutingUserResponse
 import stslex.com.features.auth.presentation.model.TokenResponse
-import stslex.com.features.auth.utils.ApiConfig
+import stslex.com.features.auth.utils.JwtConfig
+import stslex.com.features.auth.utils.JwtUnAuthConfig
 
 suspend fun PipelineContext<Unit, ApplicationCall>.processRegister(
     result: RegisterResult
@@ -59,10 +61,25 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processUnAuthToken(
         apiKey = apiKey,
         deviceId = deviceId
     ) { key, id ->
-        val token = ApiConfig.generateToken(
+        val token = JwtUnAuthConfig.generateToken(
             apiKey = key,
             deviceId = id
         )
+        val response = TokenResponse(token)
+        call.respond(response)
+    }
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.processAuthToken(
+    apiKey: String?,
+    deviceId: String?,
+    user: UserAuthModel
+) {
+    call.processApiDeviceValidationResponse(
+        apiKey = apiKey,
+        deviceId = deviceId
+    ) { _, _ ->
+        val token = JwtConfig.generateToken(user)
         val response = TokenResponse(token)
         call.respond(response)
     }
@@ -73,7 +90,7 @@ suspend inline fun ApplicationCall.processApiDeviceValidationResponse(
     deviceId: String?,
     success: (apiKey: String, deviceId: String) -> Unit
 ) {
-    if (apiKey.isNullOrBlank() || ApiConfig.validateKey(apiKey).not()) {
+    if (apiKey.isNullOrBlank() /*|| JwtUnAuthConfig.validateKey(apiKey).not()*/) {
         respond(HttpStatusCode.Unauthorized, "API KEY is invalid")
         return
     }
@@ -89,7 +106,7 @@ suspend inline fun ApplicationCall.processApiDeviceValidation(
     deviceId: String?,
     success: (apiKey: String, deviceId: String) -> Principal?
 ): Principal? {
-    if (apiKey.isNullOrBlank() || ApiConfig.validateKey(apiKey).not()) {
+    if (apiKey.isNullOrBlank() /*|| JwtUnAuthConfig.validateKey(apiKey).not()*/) {
         respond(HttpStatusCode.Unauthorized, "API KEY is invalid")
         return null
     }

@@ -20,5 +20,13 @@ class UserRepositoryImpl(
         username: String
     ): UserDataModel? = datasource.getUser(username)?.toDomain()
 
+    override suspend fun getUserByUuid(
+        uuid: String
+    ): UserDataModel? = datasource.getUserByUuid(uuid)?.toDomain()
+
     override suspend fun getAll(): List<UserDataModel> = datasource.getAll().map { it.toDomain() }
+
+    override suspend fun clearAll() {
+        datasource.clearAll()
+    }
 }
