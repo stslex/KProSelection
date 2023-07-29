@@ -8,7 +8,7 @@ import stslex.com.routing.RoutingExt.API_HOST
 import stslex.com.routing.model.TestUser
 
 fun Routing.routingApiAuth() {
-    authenticate {
+    authenticate("jwt.token.auth") {
         get("$API_HOST/testUser") {
             call.respond(TestUser("Alex"))
         }
