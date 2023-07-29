@@ -3,10 +3,8 @@ package stslex.com
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import stslex.com.plugins.configureAuthentication
-import stslex.com.plugins.configureRouting
-import stslex.com.plugins.configureSerialization
-import stslex.com.plugins.configureTemplating
+import stslex.com.data.datasource.DatabaseFactory
+import stslex.com.plugins.*
 
 fun main() {
     embeddedServer(
@@ -19,6 +17,8 @@ fun main() {
 }
 
 fun Application.module() {
+    configureDI()
+    DatabaseFactory.init()
     configureSerialization()
     configureAuthentication()
     configureTemplating()
