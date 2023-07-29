@@ -50,9 +50,14 @@ class UserDataSourceImpl : UserDataSource {
     override suspend fun getUserByUuid(
         uuid: String
     ): UserEntity? = dbQuery {
+        val currentUuid = try {
+            UUID.fromString(uuid)
+        } catch (error: IllegalArgumentException) {
+            return@dbQuery null
+        }
         UserEntitiesTable
             .select {
-                UserEntitiesTable.uuid eq UUID.fromString(uuid)
+                UserEntitiesTable.uuid eq currentUuid
             }
             .firstOrNull()
             ?.toData()
