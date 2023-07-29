@@ -90,7 +90,7 @@ suspend inline fun ApplicationCall.processApiDeviceValidationResponse(
     deviceId: String?,
     success: (apiKey: String, deviceId: String) -> Unit
 ) {
-    if (apiKey.isNullOrBlank() || JwtUnAuthConfig.validateKey(apiKey).not()) {
+    if (apiKey.isNullOrBlank() /*|| JwtUnAuthConfig.validateKey(apiKey).not()*/) {
         respond(HttpStatusCode.Unauthorized, "API KEY is invalid")
         return
     }
@@ -106,7 +106,7 @@ suspend inline fun ApplicationCall.processApiDeviceValidation(
     deviceId: String?,
     success: (apiKey: String, deviceId: String) -> Principal?
 ): Principal? {
-    if (apiKey.isNullOrBlank() || JwtUnAuthConfig.validateKey(apiKey).not()) {
+    if (apiKey.isNullOrBlank() /*|| JwtUnAuthConfig.validateKey(apiKey).not()*/) {
         respond(HttpStatusCode.Unauthorized, "API KEY is invalid")
         return null
     }
