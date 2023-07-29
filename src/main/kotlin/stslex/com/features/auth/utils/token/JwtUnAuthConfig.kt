@@ -1,4 +1,4 @@
-package stslex.com.features.auth.utils
+package stslex.com.features.auth.utils.token
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier

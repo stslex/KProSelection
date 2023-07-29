@@ -1,15 +1,16 @@
 package stslex.com.features.auth.domain.interactor
 
 import stslex.com.features.auth.data.repository.UserRepository
-import stslex.com.features.auth.domain.model.AuthUserMapper.toAuth
 import stslex.com.features.auth.domain.model.AuthUserMapper.toDomain
 import stslex.com.features.auth.domain.model.AuthUserMapper.toResponse
 import stslex.com.features.auth.domain.model.UserAuthModel
 import stslex.com.features.auth.domain.model.UserDomainModel
 import stslex.com.features.auth.domain.result.AuthResult
 import stslex.com.features.auth.domain.result.RegisterResult
-import stslex.com.features.auth.utils.JwtConfig
 import stslex.com.features.auth.utils.PasswordChecker
+import stslex.com.features.auth.utils.token.JwtConfig
+import stslex.com.features.auth.utils.token.model.UserTokenMapper.toToken
+import stslex.com.features.auth.utils.token.model.UserTokenModel
 
 class AuthInteractorImpl(
     private val repository: UserRepository,
@@ -28,7 +29,7 @@ class AuthInteractorImpl(
         val userSource = repository.saveUser(user)
             ?: return RegisterResult.SaveUserError
 
-        val token = JwtConfig.generateToken(user)
+        val token = JwtConfig.generateToken(userSource.toToken())
         val response = userSource.toResponse(token)
 
         return RegisterResult.Success(response)
@@ -48,12 +49,12 @@ class AuthInteractorImpl(
             return AuthResult.InvalidPassword
         }
 
-        val token = JwtConfig.generateToken(user)
+        val token = JwtConfig.generateToken(userSource.toToken())
         val response = userSource.toResponse(token)
         return AuthResult.Success(response)
     }
 
-    override suspend fun getUser(uuid: String): UserAuthModel? = repository.getUserByUuid(uuid)?.toAuth()
+    override suspend fun getUserTokenModel(uuid: String): UserTokenModel? = repository.getUserByUuid(uuid)?.toToken()
 
     override suspend fun getAll(): List<UserDomainModel> = repository.getAll().toDomain()
 

@@ -1,17 +1,17 @@
-package stslex.com.features.auth.presentation
+package stslex.com.features.auth.presentation.routing
 
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
-import stslex.com.features.auth.domain.model.UserAuthModel
 import stslex.com.features.auth.domain.result.AuthResult
 import stslex.com.features.auth.domain.result.RegisterResult
 import stslex.com.features.auth.presentation.model.RoutingUserResponse
 import stslex.com.features.auth.presentation.model.TokenResponse
-import stslex.com.features.auth.utils.JwtConfig
-import stslex.com.features.auth.utils.JwtUnAuthConfig
+import stslex.com.features.auth.utils.token.JwtConfig
+import stslex.com.features.auth.utils.token.JwtUnAuthConfig
+import stslex.com.features.auth.utils.token.model.UserTokenModel
 
 suspend fun PipelineContext<Unit, ApplicationCall>.processRegister(
     result: RegisterResult
@@ -57,7 +57,7 @@ suspend inline fun PipelineContext<Unit, ApplicationCall>.processTokenGenerate(
     apiKey: String?,
     deviceId: String?,
     uuid: String?,
-    crossinline getUser: suspend (uuid: String) -> UserAuthModel?
+    crossinline getUser: suspend (uuid: String) -> UserTokenModel?
 ) {
     if (uuid == null) {
         processUnAuthToken(
@@ -101,7 +101,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processUnAuthToken(
 suspend fun PipelineContext<Unit, ApplicationCall>.processAuthToken(
     apiKey: String?,
     deviceId: String?,
-    user: UserAuthModel
+    user: UserTokenModel
 ) {
     call.processApiDeviceValidationResponse(
         apiKey = apiKey,

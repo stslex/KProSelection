@@ -4,6 +4,7 @@ import stslex.com.features.auth.domain.model.UserAuthModel
 import stslex.com.features.auth.domain.model.UserDomainModel
 import stslex.com.features.auth.domain.result.AuthResult
 import stslex.com.features.auth.domain.result.RegisterResult
+import stslex.com.features.auth.utils.token.model.UserTokenModel
 
 interface AuthInteractor {
 
@@ -13,7 +14,7 @@ interface AuthInteractor {
 
     suspend fun getAll(): List<UserDomainModel>
 
-    suspend fun getUser(uuid: String): UserAuthModel?
+    suspend fun getUserTokenModel(uuid: String): UserTokenModel?
 
     suspend fun clearAll()
 }
