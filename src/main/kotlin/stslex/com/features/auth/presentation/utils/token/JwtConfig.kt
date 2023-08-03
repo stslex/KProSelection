@@ -1,9 +1,10 @@
-package stslex.com.features.auth.utils
+package stslex.com.features.auth.presentation.utils.token
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import stslex.com.features.auth.domain.model.UserAuthModel
+import com.auth0.jwt.exceptions.JWTDecodeException
+import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
 import java.util.*
 
 object JwtConfig {
@@ -20,13 +21,27 @@ object JwtConfig {
     /**
      * Produce a token for this combination of name and password
      */
-    fun generateToken(user: UserAuthModel): String = JWT.create()
+    fun generateToken(
+        user: UserTokenModel
+    ): String = JWT.create()
         .withSubject("Authentication")
         .withIssuer(ISSUER)
         .withClaim("username", user.username)
         .withClaim("password", user.password)
         .withExpiresAt(getExpiration())  // optional
         .sign(algorithm)
+        .also { token ->
+            AuthCache.setToken(
+                uuid = user.uuid,
+                token = token
+            )
+        }
+
+    fun getTokenById(jwtId: String): String? = try {
+        JWT.decode(jwtId).token
+    } catch (e: JWTDecodeException) {
+        null
+    }
 
     /**
      * Calculate the expiration Date based on current time + the given validity

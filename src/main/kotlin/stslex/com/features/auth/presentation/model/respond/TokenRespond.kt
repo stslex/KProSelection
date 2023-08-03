@@ -1,10 +1,10 @@
-package stslex.com.features.auth.presentation.model
+package stslex.com.features.auth.presentation.model.respond
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TokenResponse(
+data class TokenRespond(
     @SerialName("token")
     val token: String
 )

@@ -4,7 +4,6 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import stslex.com.datasources.user.table.DatabaseFactory
-import stslex.com.features.auth.presentation.configureAuthentication
 import stslex.com.plugins.*
 
 fun main() {

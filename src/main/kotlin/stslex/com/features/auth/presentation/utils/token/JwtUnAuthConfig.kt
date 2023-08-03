@@ -1,4 +1,4 @@
-package stslex.com.features.auth.utils
+package stslex.com.features.auth.presentation.utils.token
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
@@ -16,6 +16,7 @@ object JwtUnAuthConfig {
 
     const val API_KEY_HEADER = "API_KEY"
     const val DEVICE_ID_HEADER = "DEVICE_ID"
+    const val UUID_HEADER = "uuid"
 
     fun validateKey(key: String?): Boolean = key == PRIVATE_API_KEY
 

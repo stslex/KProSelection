@@ -3,17 +3,18 @@ package stslex.com.features.auth.data.repository
 import stslex.com.datasources.user.datasource.UserDataSource
 import stslex.com.features.auth.data.repository.mapper.UserRepositoryMapper.toDomain
 import stslex.com.features.auth.data.repository.model.UserDataModel
-import stslex.com.features.auth.domain.model.UserAuthModel
+import stslex.com.features.auth.presentation.model.response.UserAuthResponse
 
-class UserRepositoryImpl(
+class AuthRepositoryImpl(
     private val datasource: UserDataSource
 ) : UserRepository {
+
     override suspend fun isUserExist(
         username: String
     ): Boolean = datasource.isUserExist(username)
 
     override suspend fun saveUser(
-        user: UserAuthModel
+        user: UserAuthResponse
     ): UserDataModel? = datasource.saveUser(user)?.toDomain()
 
     override suspend fun getUser(
@@ -23,8 +24,6 @@ class UserRepositoryImpl(
     override suspend fun getUserByUuid(
         uuid: String
     ): UserDataModel? = datasource.getUserByUuid(uuid)?.toDomain()
-
-    override suspend fun getAll(): List<UserDataModel> = datasource.getAll().map { it.toDomain() }
 
     override suspend fun clearAll() {
         datasource.clearAll()

@@ -1,11 +1,11 @@
-package stslex.com.features.auth.domain.result
+package stslex.com.features.auth.presentation.presenter.model
 
-import stslex.com.features.auth.presentation.model.RoutingUserResponse
+import stslex.com.features.auth.presentation.model.respond.AuthUserRespond
 
 sealed interface RegisterResult {
 
     data class Success(
-        val data: RoutingUserResponse
+        val data: AuthUserRespond
     ) : RegisterResult
 
     data object InvalidPassword : RegisterResult

@@ -10,7 +10,6 @@ import stslex.com.datasources.user.table.UserEntitiesTable.uuid
 object UserDatasourceMapper {
 
     fun Query.toData(): List<UserEntity> = map { it.toData() }
-
     fun ResultRow.toData(): UserEntity = UserEntity(
         uuid = this[uuid].toString(),
         username = this[username],

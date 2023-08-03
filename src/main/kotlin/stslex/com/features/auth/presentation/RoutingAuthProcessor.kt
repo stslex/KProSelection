@@ -5,13 +5,12 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
-import stslex.com.features.auth.domain.model.UserAuthModel
-import stslex.com.features.auth.domain.result.AuthResult
-import stslex.com.features.auth.domain.result.RegisterResult
-import stslex.com.features.auth.presentation.model.RoutingUserResponse
-import stslex.com.features.auth.presentation.model.TokenResponse
-import stslex.com.features.auth.utils.JwtConfig
-import stslex.com.features.auth.utils.JwtUnAuthConfig
+import stslex.com.features.auth.presentation.presenter.model.AuthResult
+import stslex.com.features.auth.presentation.presenter.model.RegisterResult
+import stslex.com.features.auth.presentation.model.respond.TokenRespond
+import stslex.com.features.auth.presentation.utils.token.JwtConfig
+import stslex.com.features.auth.presentation.utils.token.JwtUnAuthConfig
+import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
 
 suspend fun PipelineContext<Unit, ApplicationCall>.processRegister(
     result: RegisterResult
@@ -26,11 +25,11 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processRegister(
         }
 
         is RegisterResult.InvalidPassword -> {
-            call.respond(HttpStatusCode.LengthRequired, RoutingUserResponse.DEFAULT)
+            call.respond(HttpStatusCode.LengthRequired)
         }
 
         is RegisterResult.UserIsExist -> {
-            call.respond(HttpStatusCode.Conflict, RoutingUserResponse.DEFAULT)
+            call.respond(HttpStatusCode.Conflict)
         }
     }
 }
@@ -44,11 +43,11 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processAuth(
         }
 
         is AuthResult.InvalidPassword -> {
-            call.respond(HttpStatusCode.PreconditionFailed, RoutingUserResponse.DEFAULT)
+            call.respond(HttpStatusCode.PreconditionFailed)
         }
 
         is AuthResult.UserIsNotExist -> {
-            call.respond(HttpStatusCode.NotAcceptable, RoutingUserResponse.DEFAULT)
+            call.respond(HttpStatusCode.NotAcceptable)
         }
     }
 }
@@ -56,28 +55,19 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processAuth(
 suspend inline fun PipelineContext<Unit, ApplicationCall>.processTokenGenerate(
     apiKey: String?,
     deviceId: String?,
-    uuid: String?,
-    crossinline getUser: suspend (uuid: String) -> UserAuthModel?
+    tokenModel: UserTokenModel?,
 ) {
-    if (uuid == null) {
+    if (tokenModel == null) {
         processUnAuthToken(
             apiKey = apiKey,
             deviceId = deviceId
         )
     } else {
-        val user = getUser(uuid)
-        if (user != null) {
-            processAuthToken(
-                apiKey = apiKey,
-                deviceId = deviceId,
-                user = user
-            )
-        } else {
-            processUnAuthToken(
-                apiKey = apiKey,
-                deviceId = deviceId
-            )
-        }
+        processAuthToken(
+            apiKey = apiKey,
+            deviceId = deviceId,
+            user = tokenModel
+        )
     }
 }
 
@@ -93,7 +83,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processUnAuthToken(
             apiKey = key,
             deviceId = id
         )
-        val response = TokenResponse(token)
+        val response = TokenRespond(token)
         call.respond(response)
     }
 }
@@ -101,14 +91,14 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processUnAuthToken(
 suspend fun PipelineContext<Unit, ApplicationCall>.processAuthToken(
     apiKey: String?,
     deviceId: String?,
-    user: UserAuthModel
+    user: UserTokenModel
 ) {
     call.processApiDeviceValidationResponse(
         apiKey = apiKey,
         deviceId = deviceId
     ) { _, _ ->
         val token = JwtConfig.generateToken(user)
-        val response = TokenResponse(token)
+        val response = TokenRespond(token)
         call.respond(response)
     }
 }

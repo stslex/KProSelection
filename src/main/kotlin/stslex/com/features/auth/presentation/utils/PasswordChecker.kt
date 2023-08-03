@@ -1,4 +1,4 @@
-package stslex.com.features.auth.utils
+package stslex.com.features.auth.presentation.utils
 
 interface PasswordChecker {
 

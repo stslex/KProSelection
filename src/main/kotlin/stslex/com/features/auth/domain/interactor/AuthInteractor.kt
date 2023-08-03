@@ -1,19 +1,14 @@
 package stslex.com.features.auth.domain.interactor
 
-import stslex.com.features.auth.domain.model.UserAuthModel
-import stslex.com.features.auth.domain.model.UserDomainModel
-import stslex.com.features.auth.domain.result.AuthResult
-import stslex.com.features.auth.domain.result.RegisterResult
+import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.domain.model.UserAuthDomainModel
+import stslex.com.features.auth.domain.model.RegisterDomainResult
 
 interface AuthInteractor {
 
-    suspend fun register(user: UserAuthModel): RegisterResult
+    suspend fun register(user: UserAuthResponse): RegisterDomainResult
 
-    suspend fun auth(user: UserAuthModel): AuthResult
+    suspend fun getUserByUuid(uuid: String): UserAuthDomainModel?
 
-    suspend fun getAll(): List<UserDomainModel>
-
-    suspend fun getUser(uuid: String): UserAuthModel?
-
-    suspend fun clearAll()
+    suspend fun getUserByUsername(username: String): UserAuthDomainModel?
 }

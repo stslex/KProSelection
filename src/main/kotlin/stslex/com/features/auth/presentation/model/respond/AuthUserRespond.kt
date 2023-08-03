@@ -1,10 +1,10 @@
-package stslex.com.features.auth.presentation.model
+package stslex.com.features.auth.presentation.model.respond
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RoutingUserResponse(
+data class AuthUserRespond(
     @SerialName("uuid")
     val uuid: String,
     @SerialName("username")
@@ -13,15 +13,4 @@ data class RoutingUserResponse(
     val nickname: String,
     @SerialName("token")
     val token: String
-) {
-
-    companion object {
-
-        val DEFAULT = RoutingUserResponse(
-            uuid = "",
-            username = "",
-            nickname = "",
-            token = ""
-        )
-    }
-}
+)

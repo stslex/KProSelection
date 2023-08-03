@@ -4,9 +4,10 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import stslex.com.datasources.user.model.UserDatasourceMapper.toData
 import stslex.com.datasources.user.model.UserEntity
+import stslex.com.datasources.user.model.UserUpdateEntity
 import stslex.com.datasources.user.table.DatabaseFactory.dbQuery
 import stslex.com.datasources.user.table.UserEntitiesTable
-import stslex.com.features.auth.domain.model.UserAuthModel
+import stslex.com.features.auth.presentation.model.response.UserAuthResponse
 import java.util.*
 
 class UserDataSourceImpl : UserDataSource {
@@ -14,16 +15,15 @@ class UserDataSourceImpl : UserDataSource {
     override suspend fun isUserExist(
         username: String
     ): Boolean = dbQuery {
-        val user = UserEntitiesTable
+        UserEntitiesTable
             .select {
                 UserEntitiesTable.username eq username
             }
-            .firstOrNull()
-        user != null
+            .firstOrNull() != null
     }
 
     override suspend fun saveUser(
-        user: UserAuthModel
+        user: UserAuthResponse
     ): UserEntity? = dbQuery {
         val insertStatement = UserEntitiesTable.insert {
             it[username] = user.username
@@ -63,10 +63,41 @@ class UserDataSourceImpl : UserDataSource {
             ?.toData()
     }
 
-    override suspend fun getAll(): List<UserEntity> = dbQuery {
+    override suspend fun updateFields(
+        uuid: String,
+        update: UserUpdateEntity
+    ): UserEntity? = dbQuery {
+        val currentUuid = try {
+            UUID.fromString(uuid)
+        } catch (error: IllegalArgumentException) {
+            return@dbQuery null
+        }
+        UserEntitiesTable
+            .update(
+                {
+                    UserEntitiesTable.uuid eq currentUuid
+                }
+            ) {
+                it[nickname] = update.nickname
+            }
+        UserEntitiesTable
+            .select {
+                UserEntitiesTable.uuid eq currentUuid
+            }
+            .firstOrNull()
+            ?.toData()
+    }
+
+    override suspend fun getAll(
+        page: Int,
+        pageSize: Int
+    ): List<UserEntity> = dbQuery {
         UserEntitiesTable
             .selectAll()
-            .limit(20)
+            .limit(
+                n = pageSize,
+                offset = page * pageSize.toLong()
+            )
             .toData()
     }
 
