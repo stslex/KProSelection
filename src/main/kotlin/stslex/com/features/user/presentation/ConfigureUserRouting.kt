@@ -6,6 +6,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.*
 import org.koin.ktor.ext.inject
 import stslex.com.features.auth.presentation.plugin.AuthConfig
 import stslex.com.features.auth.presentation.utils.token.JwtUnAuthConfig.UUID_HEADER
@@ -24,7 +25,10 @@ fun Routing.routingUser() {
     authenticate(AuthConfig.JWT_TOKEN.configName) {
 
         get("$USER_PATH/list") {
-            val response = call.receive<PagingResponse>()
+            val response = PagingResponse(
+                pageSize = call.attributes[AttributeKey("page_size")],
+                pageNumber = call.attributes[AttributeKey("page_number")]
+            )
             val items = interactor.getAll(
                 page = response.pageNumber,
                 pageSize = response.pageSize
