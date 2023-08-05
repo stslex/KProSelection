@@ -4,12 +4,14 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTDecodeException
+import com.typesafe.config.ConfigFactory
+import io.ktor.server.config.*
 import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
 import java.util.*
 
 object JwtConfig {
 
-    private const val SECRET = "F3YIwamJn9yJqUHj" // TODO change to property
+    private val SECRET = HoconApplicationConfig(ConfigFactory.load()).property("jwt.auth.secret").getString()
     private const val ISSUER = "token is invalid"
     private const val VALIDITY_IN_MS = 36_000_00 * 24 // 1 day
     private val algorithm = Algorithm.HMAC512(SECRET)
