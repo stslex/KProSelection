@@ -3,13 +3,11 @@ package stslex.com.features.auth.presentation.utils.token
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import com.typesafe.config.ConfigFactory
-import io.ktor.server.config.*
+import stslex.com.config
 import java.util.*
 
 object JwtUnAuthConfig {
 
-    private val config = HoconApplicationConfig(ConfigFactory.load())
     private val SECRET = config.property("jwt.unAuth.secret").getString()
     private const val ISSUER = "token is invalid"
     private val PRIVATE_API_KEY = config.property("apiKey").getString()
