@@ -13,6 +13,7 @@ plugins {
 
 group = "stslex.com"
 version = "0.0.1"
+
 application {
     mainClass.set("stslex.com.ApplicationKt")
 
@@ -27,12 +28,14 @@ repositories {
 dependencies {
     val exposedVersion = "0.41.1"
     val h2Version = "2.1.214"
+    val postgresVersion = "42.5.1"
 
     /*Exposed*/
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("com.h2database:h2:$h2Version")
+    implementation("org.postgresql:postgresql:$postgresVersion")
 
     /*Koin*/
     val koinVersion = "3.4.3"

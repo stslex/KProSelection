@@ -23,6 +23,11 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: set up CONFIG
+        env:
+          LOCAL_PROPERTIES: ${{ secrets.CONFIG }}
+        run: echo "CONFIG" > src/main/resources/application.conf
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -55,5 +60,6 @@ jobs:
           script: |
             docker pull stslex/kproselection:test
             docker kill $(docker ps -q)
+            docker remove $(docker ps -a -f status=exited -q)
             docker run -d -p 80:8080 --restart always stslex/kproselection:latest
             docker run -d -p 8080:8080 --restart always stslex/kproselection:test
