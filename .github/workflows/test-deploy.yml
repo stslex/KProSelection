@@ -5,6 +5,10 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
 
@@ -25,14 +29,22 @@ jobs:
 
       - name: set up CONFIG
         env:
-          LOCAL_PROPERTIES: ${{ secrets.CONFIG }}
-        run: echo "CONFIG" > src/main/resources/application.conf
+          CONFIG: ${{ secrets.CONFIG }}
+        run: |
+          echo "$CONFIG" > src/main/resources/application.conf
+          ls src/main/resources
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "**/build/test-results/**/*.xml"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -59,7 +71,6 @@ jobs:
           key: ${{ secrets.SERVER_SSH }}
           script: |
             docker pull stslex/kproselection:test
-            docker kill $(docker ps -q)
+            docker kill $(docker ps -a -f ancestor=stslex/kproselection:test -q)
             docker remove $(docker ps -a -f status=exited -q)
-            docker run -d -p 80:8080 --restart always stslex/kproselection:latest
             docker run -d -p 8080:8080 --restart always stslex/kproselection:test
