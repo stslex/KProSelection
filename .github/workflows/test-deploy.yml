@@ -74,4 +74,4 @@ jobs:
             docker pull stslex/kproselection:test
             docker kill $(docker ps -a -f ancestor=stslex/kproselection:test -q)
             docker remove $(docker ps -a -f status=exited -q)
-            docker run -d -p 8080:8080 --restart always stslex/kproselection:test
+            docker run -d -p 8080:8080 --name proselection_test --network postgress_network --restart always stslex/kproselection:test
