@@ -3,16 +3,17 @@ package stslex.com.features.auth.presentation.utils.token
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
+import stslex.com.config
 import java.util.*
 
 object JwtUnAuthConfig {
 
-    private const val UN_AUTH_SECRET = "QSCgrYA4B8gxcABV" // TODO change to property
+    private val SECRET = config.property("jwt.unAuth.secret").getString()
     private const val ISSUER = "token is invalid"
-    private const val PRIVATE_API_KEY = "duaVBvGw3WGJLW8A" // TODO change to property
+    private val PRIVATE_API_KEY = config.property("apiKey").getString()
     private const val ISSUER_UN_AUTH = "token is invalid"
     private const val VALIDITY_IN_MS = 36_000_00 * 24 // 1 day
-    private val algorithm = Algorithm.HMAC512(UN_AUTH_SECRET)
+    private val algorithm = Algorithm.HMAC512(SECRET)
 
     const val API_KEY_HEADER = "API_KEY"
     const val DEVICE_ID_HEADER = "DEVICE_ID"
