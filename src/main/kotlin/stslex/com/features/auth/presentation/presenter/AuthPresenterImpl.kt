@@ -17,9 +17,9 @@ class AuthPresenterImpl(
 
     override suspend fun register(
         user: UserAuthResponse
-    ): RegisterResult {
+    ): RegisterResult<Any> {
         if (passwordChecker.isValid(user.password).not()) {
-            return RegisterResult.InvalidPassword
+            return RegisterResult.Error.InvalidPassword
         }
         val userDomain = interactor.register(user)
         val tokenModel = userDomain.toTokenModel()
@@ -27,11 +27,11 @@ class AuthPresenterImpl(
         return userDomain.toPresentation(token)
     }
 
-    override suspend fun auth(user: UserAuthResponse): AuthResult {
+    override suspend fun auth(user: UserAuthResponse): AuthResult<Any> {
         val userDomain = interactor.getUserByUsername(
             username = user.username
-        ) ?: return AuthResult.UserIsNotExist
-        if (userDomain.password != user.password) return AuthResult.InvalidPassword
+        ) ?: return AuthResult.Error.UserIsNotExist
+        if (userDomain.password != user.password) return AuthResult.Error.InvalidPassword
         val tokenModel = userDomain.toTokenModel()
         val token = JwtConfig.generateToken(tokenModel)
         return AuthResult.Success(userDomain.toPresentation(token))

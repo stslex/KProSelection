@@ -7,9 +7,9 @@ import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
 
 interface AuthPresenter {
 
-    suspend fun register(user: UserAuthResponse): RegisterResult
+    suspend fun register(user: UserAuthResponse): RegisterResult<Any>
 
-    suspend fun auth(user: UserAuthResponse): AuthResult
+    suspend fun auth(user: UserAuthResponse): AuthResult<Any>
 
     suspend fun getUserTokenModel(uuid: String): UserTokenModel?
 }

@@ -7,9 +7,9 @@ import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
 
 fun RegisterDomainResult.toPresentation(
     token: String
-): RegisterResult = when (this) {
-    is RegisterDomainResult.SaveUserError -> RegisterResult.SaveUserError
-    is RegisterDomainResult.UserIsExist -> RegisterResult.UserIsExist
+) = when (this) {
+    is RegisterDomainResult.SaveUserError -> RegisterResult.Error.SaveUserError
+    is RegisterDomainResult.UserIsExist -> RegisterResult.Error.UserIsExist
     is RegisterDomainResult.Success -> RegisterResult.Success(
         data = data.toPresentation(token)
     )
