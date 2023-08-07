@@ -1,56 +1,14 @@
 package stslex.com.features.auth.presentation
 
-import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
-import stslex.com.features.auth.presentation.presenter.model.AuthResult
-import stslex.com.features.auth.presentation.presenter.model.RegisterResult
 import stslex.com.features.auth.presentation.model.respond.TokenRespond
 import stslex.com.features.auth.presentation.utils.token.JwtConfig
 import stslex.com.features.auth.presentation.utils.token.JwtUnAuthConfig
 import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
-
-suspend fun PipelineContext<Unit, ApplicationCall>.processRegister(
-    result: RegisterResult
-) {
-    when (result) {
-        is RegisterResult.Success -> {
-            call.respond(HttpStatusCode.Created, result.data)
-        }
-
-        is RegisterResult.SaveUserError -> {
-            call.respond(HttpStatusCode.InternalServerError)
-        }
-
-        is RegisterResult.InvalidPassword -> {
-            call.respond(HttpStatusCode.LengthRequired)
-        }
-
-        is RegisterResult.UserIsExist -> {
-            call.respond(HttpStatusCode.Conflict)
-        }
-    }
-}
-
-suspend fun PipelineContext<Unit, ApplicationCall>.processAuth(
-    result: AuthResult
-) {
-    when (result) {
-        is AuthResult.Success -> {
-            call.respond(HttpStatusCode.Accepted, result.data)
-        }
-
-        is AuthResult.InvalidPassword -> {
-            call.respond(HttpStatusCode.PreconditionFailed)
-        }
-
-        is AuthResult.UserIsNotExist -> {
-            call.respond(HttpStatusCode.NotAcceptable)
-        }
-    }
-}
+import stslex.com.model.ApiError.Unauthorized.ApiKey
+import stslex.com.model.ApiError.Unauthorized.DeviceId
 
 suspend inline fun PipelineContext<Unit, ApplicationCall>.processTokenGenerate(
     apiKey: String?,
@@ -109,28 +67,12 @@ suspend inline fun ApplicationCall.processApiDeviceValidationResponse(
     success: (apiKey: String, deviceId: String) -> Unit
 ) {
     if (apiKey.isNullOrBlank() || JwtUnAuthConfig.validateKey(apiKey).not()) {
-        respond(HttpStatusCode.Unauthorized, "API KEY is invalid")
+        respond(ApiKey.statusCode, ApiKey.data)
         return
     }
     if (deviceId.isNullOrBlank()) {
-        respond(HttpStatusCode.Unauthorized, "DEVICE ID is invalid")
+        respond(DeviceId.statusCode, DeviceId.data)
         return
     }
     success(apiKey, deviceId)
-}
-
-suspend inline fun ApplicationCall.processApiDeviceValidation(
-    apiKey: String?,
-    deviceId: String?,
-    success: (apiKey: String, deviceId: String) -> Principal?
-): Principal? {
-    if (apiKey.isNullOrBlank() || JwtUnAuthConfig.validateKey(apiKey).not()) {
-        respond(HttpStatusCode.Unauthorized, "API KEY is invalid")
-        return null
-    }
-    if (deviceId.isNullOrBlank()) {
-        respond(HttpStatusCode.Unauthorized, "DEVICE ID is invalid")
-        return null
-    }
-    return success(apiKey, deviceId)
 }
