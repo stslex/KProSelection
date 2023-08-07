@@ -6,13 +6,13 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.*
 import org.koin.ktor.ext.inject
 import stslex.com.features.auth.presentation.plugin.AuthConfig
 import stslex.com.features.auth.presentation.utils.token.JwtUnAuthConfig.UUID_HEADER
 import stslex.com.features.user.domain.UserInteractor
 import stslex.com.features.user.presentation.model.UserUpdateResponse
 import stslex.com.features.user.presentation.model.toRespond
-import stslex.com.model.PagingResponse
 import stslex.com.routing.RoutingExt
 
 private const val USER_END_POINT = "user"
@@ -24,10 +24,9 @@ fun Routing.routingUser() {
     authenticate(AuthConfig.JWT_TOKEN.configName) {
 
         get("$USER_PATH/list") {
-            val response = call.receiveNullable<PagingResponse>() ?: PagingResponse()
             val items = interactor.getAll(
-                page = response.pageNumber,
-                pageSize = response.pageSize
+                page = call.attributes.getOrNull(AttributeKey("page_number")) ?: 0,
+                pageSize = call.attributes.getOrNull(AttributeKey("page_size")) ?: 10
             ).toRespond()
             call.respond(items)
         }
