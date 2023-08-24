@@ -37,6 +37,9 @@ dependencies {
     implementation("com.h2database:h2:$h2Version")
     implementation("org.postgresql:postgresql:$postgresVersion")
 
+    /*Swagger*/
+    implementation("io.ktor:ktor-server-swagger:$ktor_version")
+
     /*Koin*/
     val koinVersion = "3.4.3"
     implementation("io.insert-koin:koin-core:$koinVersion")

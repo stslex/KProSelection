@@ -1,0 +1,111 @@
+openapi: "3.0.2"
+info:
+  title: "API Title"
+  version: "1.0"
+servers:
+  - url: "http://46.151.30.82/api/v1"
+    description: prod
+  - url: "http://46.151.30.82:8080/api/v1"
+    description: test
+  - url: "http://0.0.0.0:8080/api/v1"
+    description: localhost
+
+components:
+  schemas:
+    TokenRespond:
+      properties:
+        token:
+          type: string
+
+    HelloRespond:
+      properties:
+        text:
+          type: string
+
+    ErrorRespond:
+      properties:
+        messageCode:
+          type: integer
+        message:
+          type: string
+
+paths:
+  /token:
+    get:
+      tags:
+        - Auth
+        - Token
+      summary: Token generaion
+      description: Generate token
+      parameters:
+        - name: "API_KEY"
+          in: header
+          required: true
+          description: to get test token put "test" value
+
+        - name: "DEVICE_ID"
+          in: header
+          required: true
+          description: to get test token put "test" value
+
+        - name: "TOKEN"
+          in: header
+          required: false
+
+        - name: "UUID"
+          in: header
+          required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRespond'
+        '400':
+          description: |
+            UNAUTHORIZED \
+            messageCode = 1, message = "Token is Invalid or has been expired" \
+            messageCode = 2, message = "Api Key is Invalid" \
+            messageCode = 3, message = "Device Id is Invalid"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRespond'
+
+  /hello:
+    get:
+      tags:
+        - Test
+      summary: Gets hello test string
+      description: >
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloRespond'
+
+
+  /hello/{username}:
+    summary: Test method
+    get:
+      tags:
+        - Test
+      summary: Gets hello test string with name
+      description: >
+        Method for test api - always return hello world with input name.
+
+      parameters:
+        - name: username
+          in: path
+          required: false
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloRespond'

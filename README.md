@@ -16,6 +16,9 @@ Backend Application written on Kotlin using Ktor.
 - Database
     - [Exposed](https://github.com/JetBrains/Exposed)
     - [Postgres](https://www.postgresql.org/docs/)
+- Swagger
+    - available at [test]("http://46.151.30.82:8080/swagger")
+    - available at [prod]("http://46.151.30.82/swagger")
 
 ## Future features
 
@@ -25,4 +28,4 @@ Backend Application written on Kotlin using Ktor.
 
 ## [Deployment](https://ktor.io/docs/deploy.html)
 
-For Deployment use Docker - [official documentation](https://ktor.io/docs/docker.html) with Github actions
+For Deployment use Docker - [official documentation](https://ktor.io/docs/docker.html) with GitHub actions
