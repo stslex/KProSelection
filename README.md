@@ -17,8 +17,8 @@ Backend Application written on Kotlin using Ktor.
     - [Exposed](https://github.com/JetBrains/Exposed)
     - [Postgres](https://www.postgresql.org/docs/)
 - Swagger
-    - available at .[test]("http://46.151.30.82:8080/swagger")
-    - available at .[prod]("http://46.151.30.82/swagger")
+    - available at [test](http://46.151.30.82:8080/swagger)
+    - available at [prod](http://46.151.30.82/swagger)
 
 ## Future features
 
