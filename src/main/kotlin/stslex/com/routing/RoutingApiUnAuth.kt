@@ -7,6 +7,9 @@ import stslex.com.routing.RoutingExt.API_HOST
 import stslex.com.routing.model.HelloResponse
 
 fun Routing.routingApiUnAuth() {
+    get("$API_HOST/testRouting") {
+        call.respondRedirect("http://46.151.30.82/api/v1/hello")
+    }
     get("$API_HOST/hello") {
         call.respond(HelloResponse("hello"))
     }
