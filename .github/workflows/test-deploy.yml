@@ -71,7 +71,5 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           key: ${{ secrets.SERVER_SSH }}
           script: |
-            docker pull stslex/kproselection:test
-            docker kill $(docker ps -a -f name=proselection_test -q)
-            docker remove $(docker ps -a -f status=exited -q)
-            docker run -d -p 8080:8080 --name proselection_test --network postgress_network --restart always stslex/kproselection:test
+            docker compose pull pro_selection_test
+            docker compose restart pro_selection_test

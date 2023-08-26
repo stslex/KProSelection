@@ -10,6 +10,9 @@ fun Routing.routingApiUnAuth() {
     get("$API_HOST/hello") {
         call.respond(HelloResponse("hello"))
     }
+    get("$API_HOST/test/v2") {
+        call.respond(HelloResponse("hello"))
+    }
     get("$API_HOST/hello/{username}") {
         val username = call.parameters["username"].orEmpty()
         val helloText = "hello $username"
