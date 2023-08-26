@@ -43,7 +43,11 @@ fun Routing.routingAuth() {
             return@get
         } else {
             val uuid = call.request.header(UUID_HEADER)
-            val tokenModel = if (uuid != null) presenter.getUserTokenModel(uuid) else null
+            val tokenModel = if (uuid != null) {
+                presenter.getUserTokenModel(uuid)
+            } else {
+                null
+            }
             processTokenGenerate(
                 apiKey = call.request.header(API_KEY_HEADER),
                 deviceId = call.request.header(DEVICE_ID_HEADER),
