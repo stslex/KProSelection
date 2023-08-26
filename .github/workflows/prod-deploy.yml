@@ -62,4 +62,5 @@ jobs:
           key: ${{ secrets.SERVER_SSH }}
           script: |
             docker compose pull pro_selection_latest
-            docker compose restart pro_selection_latest
+            docker compose down pro_selection_latest
+            docker compose up pro_selection_latest -d
