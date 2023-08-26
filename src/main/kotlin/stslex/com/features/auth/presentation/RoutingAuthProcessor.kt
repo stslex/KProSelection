@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import stslex.com.features.auth.presentation.model.respond.TokenRespond
+import stslex.com.features.auth.presentation.utils.token.AuthCache
 import stslex.com.features.auth.presentation.utils.token.JwtConfig
 import stslex.com.features.auth.presentation.utils.token.JwtUnAuthConfig
 import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
@@ -55,7 +56,8 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processAuthToken(
         apiKey = apiKey,
         deviceId = deviceId
     ) { _, _ ->
-        val token = JwtConfig.generateToken(user)
+        val token = AuthCache.getToken(user.uuid)
+            ?: JwtConfig.generateToken(user)
         val response = TokenRespond(token)
         call.respond(response)
     }

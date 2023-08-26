@@ -36,7 +36,7 @@ object JwtUnAuthConfig {
         .withIssuer(ISSUER)
         .withClaim("apiKey", apiKey)
         .withClaim("deviceId", deviceId)
-        .withExpiresAt(getExpiration())  // optional
+        .withExpiresAt(getExpiration())
         .sign(algorithm)
 
     /**

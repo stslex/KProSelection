@@ -3,7 +3,7 @@ package stslex.com.features.auth.presentation.utils.token
 object AuthCache {
 
     private var _tokens: MutableMap<String, String> = mutableMapOf()
-    val tokens: Map<String, String>
+    private val tokens: Map<String, String>
         get() = _tokens
 
     fun setToken(
@@ -12,6 +12,8 @@ object AuthCache {
     ) {
         _tokens[uuid] = token
     }
+
+    fun getToken(uuid: String): String? = _tokens[uuid]
 
     fun isValid(
         jwtId: String?,
