@@ -3,7 +3,7 @@ package stslex.com.features.auth.data.repository
 import stslex.com.datasources.user.datasource.UserDataSource
 import stslex.com.features.auth.data.repository.mapper.UserRepositoryMapper.toDomain
 import stslex.com.features.auth.data.repository.model.UserDataModel
-import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 
 class AuthRepositoryImpl(
     private val datasource: UserDataSource
@@ -14,7 +14,7 @@ class AuthRepositoryImpl(
     ): Boolean = datasource.isUserExist(username)
 
     override suspend fun saveUser(
-        user: UserAuthResponse
+        user: UserAuthRequest
     ): UserDataModel? = datasource.saveUser(user)?.toDomain()
 
     override suspend fun getUser(

@@ -2,13 +2,13 @@ package stslex.com.datasources.user.datasource
 
 import stslex.com.datasources.user.model.UserEntity
 import stslex.com.datasources.user.model.UserUpdateEntity
-import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 
 interface UserDataSource {
 
     suspend fun isUserExist(username: String): Boolean
 
-    suspend fun saveUser(user: UserAuthResponse): UserEntity?
+    suspend fun saveUser(user: UserAuthRequest): UserEntity?
 
     suspend fun getUser(username: String): UserEntity?
 
@@ -17,7 +17,7 @@ interface UserDataSource {
     suspend fun updateFields(
         uuid: String,
         update: UserUpdateEntity
-    ): UserEntity?
+    ): UserEntity
 
     suspend fun getAll(
         page: Int,

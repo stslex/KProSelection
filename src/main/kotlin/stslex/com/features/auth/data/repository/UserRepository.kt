@@ -1,13 +1,13 @@
 package stslex.com.features.auth.data.repository
 
 import stslex.com.features.auth.data.repository.model.UserDataModel
-import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 
 interface UserRepository {
 
     suspend fun isUserExist(username: String): Boolean
 
-    suspend fun saveUser(user: UserAuthResponse): UserDataModel?
+    suspend fun saveUser(user: UserAuthRequest): UserDataModel?
 
     suspend fun getUser(username: String): UserDataModel?
 

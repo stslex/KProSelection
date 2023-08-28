@@ -7,7 +7,7 @@ import stslex.com.datasources.user.model.UserEntity
 import stslex.com.datasources.user.model.UserUpdateEntity
 import stslex.com.datasources.user.table.DatabaseFactory.dbQuery
 import stslex.com.datasources.user.table.UserEntitiesTable
-import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 import java.util.*
 
 class UserDataSourceImpl : UserDataSource {
@@ -23,7 +23,7 @@ class UserDataSourceImpl : UserDataSource {
     }
 
     override suspend fun saveUser(
-        user: UserAuthResponse
+        user: UserAuthRequest
     ): UserEntity? = dbQuery {
         val insertStatement = UserEntitiesTable.insert {
             it[username] = user.username
@@ -66,12 +66,9 @@ class UserDataSourceImpl : UserDataSource {
     override suspend fun updateFields(
         uuid: String,
         update: UserUpdateEntity
-    ): UserEntity? = dbQuery {
-        val currentUuid = try {
-            UUID.fromString(uuid)
-        } catch (error: IllegalArgumentException) {
-            return@dbQuery null
-        }
+    ): UserEntity = dbQuery {
+        val currentUuid = UUID.fromString(uuid)
+            ?: throw IllegalStateException("uuid parsing error")
         UserEntitiesTable
             .update(
                 {
@@ -86,6 +83,7 @@ class UserDataSourceImpl : UserDataSource {
             }
             .firstOrNull()
             ?.toData()
+            ?: throw IllegalStateException("server save error")
     }
 
     override suspend fun getAll(

@@ -2,7 +2,7 @@ package stslex.com.features.auth.domain.interactor
 
 import stslex.com.features.auth.data.repository.UserRepository
 import stslex.com.features.auth.domain.model.AuthUserMapper.toDomain
-import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 import stslex.com.features.auth.domain.model.UserAuthDomainModel
 import stslex.com.features.auth.domain.model.RegisterDomainResult
 
@@ -11,7 +11,7 @@ class AuthInteractorImpl(
 ) : AuthInteractor {
 
     override suspend fun register(
-        user: UserAuthResponse
+        user: UserAuthRequest
     ): RegisterDomainResult {
         if (repository.isUserExist(user.username)) {
             return RegisterDomainResult.UserIsExist

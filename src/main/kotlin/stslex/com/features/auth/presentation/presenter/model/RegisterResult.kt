@@ -1,22 +1,20 @@
 package stslex.com.features.auth.presentation.presenter.model
 
 import io.ktor.http.*
-import stslex.com.features.auth.presentation.model.respond.AuthUserRespond
 import stslex.com.model.ApiError
 import stslex.com.model.ApiError.Authentication.InvalidPasswordFormat
 import stslex.com.model.ApiError.Authentication.SaveUser
 import stslex.com.model.ApiErrorRespond
+import stslex.com.model.MessageResponse
 
 sealed class RegisterResult<out T>(
     val statusCode: HttpStatusCode,
     open val data: T
 ) {
 
-    data class Success(
-        override val data: AuthUserRespond
-    ) : RegisterResult<AuthUserRespond>(
+    data object Success : RegisterResult<MessageResponse>(
         statusCode = HttpStatusCode.OK,
-        data = data
+        data = MessageResponse("success register")
     )
 
     sealed class Error(
@@ -33,4 +31,3 @@ sealed class RegisterResult<out T>(
         data object SaveUserError : Error(SaveUser)
     }
 }
-

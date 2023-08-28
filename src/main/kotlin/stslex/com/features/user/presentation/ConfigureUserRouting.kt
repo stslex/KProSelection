@@ -3,13 +3,13 @@ package stslex.com.features.user.presentation
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.*
 import org.koin.ktor.ext.inject
 import stslex.com.features.auth.presentation.plugin.AuthConfig
-import stslex.com.features.auth.presentation.utils.token.JwtUnAuthConfig.UUID_HEADER
 import stslex.com.features.user.domain.UserInteractor
 import stslex.com.features.user.presentation.model.UserUpdateResponse
 import stslex.com.features.user.presentation.model.toRespond
@@ -21,7 +21,7 @@ private const val USER_PATH = "${RoutingExt.API_HOST}/$USER_END_POINT"
 fun Routing.routingUser() {
     val interactor by inject<UserInteractor>()
 
-    authenticate(AuthConfig.JWT_TOKEN.configName) {
+    authenticate(AuthConfig.JWT_TOKEN_AUTH.configName) {
 
         get("$USER_PATH/list") {
             val items = interactor.getAll(
@@ -41,23 +41,21 @@ fun Routing.routingUser() {
             }
         }
 
-        post("$USER_PATH/update") {
-            val response = call.receive<UserUpdateResponse>()
-            val uuid = call.request.header(UUID_HEADER)
+        put("$USER_PATH/update") {
+            val request = call.receive<UserUpdateResponse>()
+            val uuid = call.authentication.principal<JWTPrincipal>()?.jwtId
             if (uuid == null) {
                 call.respond(HttpStatusCode.Unauthorized, "uuid should be empty")
-                return@post
+                return@put
             }
             try {
-                val response = interactor.updateFields(
-                    uuid = uuid,
-                    update = response
-                )?.toRespond()
-                if (response == null) {
-                    call.respond(HttpStatusCode.InternalServerError)
-                } else {
-                    call.respond(response)
-                }
+                val response = interactor
+                    .updateFields(
+                        uuid = uuid,
+                        update = request
+                    )
+                    .toRespond()
+                call.respond(response)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
