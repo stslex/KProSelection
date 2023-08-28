@@ -12,5 +12,5 @@ interface UserInteractor {
     suspend fun updateFields(
         uuid: String,
         update: UserUpdateResponse
-    ): UserDomainModel?
+    ): UserDomainModel
 }

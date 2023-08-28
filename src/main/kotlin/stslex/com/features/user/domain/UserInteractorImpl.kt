@@ -28,8 +28,8 @@ class UserInteractorImpl(
     override suspend fun updateFields(
         uuid: String,
         update: UserUpdateResponse
-    ): UserDomainModel? = dataSource.updateFields(
+    ): UserDomainModel = dataSource.updateFields(
         uuid = uuid,
         update = update.toEntity()
-    )?.toDomain()
+    ).toDomain()
 }

@@ -17,7 +17,7 @@ interface UserDataSource {
     suspend fun updateFields(
         uuid: String,
         update: UserUpdateEntity
-    ): UserEntity?
+    ): UserEntity
 
     suspend fun getAll(
         page: Int,

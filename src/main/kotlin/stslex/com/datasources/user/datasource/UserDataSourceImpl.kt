@@ -66,12 +66,9 @@ class UserDataSourceImpl : UserDataSource {
     override suspend fun updateFields(
         uuid: String,
         update: UserUpdateEntity
-    ): UserEntity? = dbQuery {
-        val currentUuid = try {
-            UUID.fromString(uuid)
-        } catch (error: IllegalArgumentException) {
-            return@dbQuery null
-        }
+    ): UserEntity = dbQuery {
+        val currentUuid = UUID.fromString(uuid)
+            ?: throw IllegalStateException("uuid parsing error")
         UserEntitiesTable
             .update(
                 {
@@ -86,6 +83,7 @@ class UserDataSourceImpl : UserDataSource {
             }
             .firstOrNull()
             ?.toData()
+            ?: throw IllegalStateException("server save error")
     }
 
     override suspend fun getAll(
