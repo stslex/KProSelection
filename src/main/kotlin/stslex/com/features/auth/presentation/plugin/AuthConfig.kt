@@ -4,9 +4,9 @@ enum class AuthConfig(
     val configName: String,
     val realm: String
 ) {
-    JWT_TOKEN(
-        configName = "jwt.token",
-        realm = "Access to the auth path"
+    DEFAULT(
+        configName = "default.auth",
+        realm = "Access to request"
     ),
     JWT_TOKEN_AUTH(
         configName = "jwt.token.auth",

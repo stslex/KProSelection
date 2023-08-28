@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PagingResponse(
+data class PagingRequest(
     @SerialName("page_size")
     val pageSize: Int = 10,
     @SerialName("page_number")

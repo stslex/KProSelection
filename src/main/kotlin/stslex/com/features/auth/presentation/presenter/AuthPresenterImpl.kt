@@ -1,7 +1,7 @@
 package stslex.com.features.auth.presentation.presenter
 
 import stslex.com.features.auth.domain.interactor.AuthInteractor
-import stslex.com.features.auth.presentation.model.response.UserAuthResponse
+import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 import stslex.com.features.auth.presentation.presenter.model.AuthResult
 import stslex.com.features.auth.presentation.presenter.model.RegisterResult
 import stslex.com.features.auth.presentation.presenter.model.toPresentation
@@ -16,24 +16,22 @@ class AuthPresenterImpl(
 ) : AuthPresenter {
 
     override suspend fun register(
-        user: UserAuthResponse
+        user: UserAuthRequest
     ): RegisterResult<Any> {
         if (passwordChecker.isValid(user.password).not()) {
             return RegisterResult.Error.InvalidPassword
         }
-        val userDomain = interactor.register(user)
-        val tokenModel = userDomain.toTokenModel()
-        val token = tokenModel?.let(JwtConfig::generateToken).orEmpty()
-        return userDomain.toPresentation(token)
+        return interactor.register(user).toPresentation()
     }
 
-    override suspend fun auth(user: UserAuthResponse): AuthResult<Any> {
+    override suspend fun auth(user: UserAuthRequest): AuthResult<Any> {
         val userDomain = interactor.getUserByUsername(
             username = user.username
         ) ?: return AuthResult.Error.UserIsNotExist
         if (userDomain.password != user.password) return AuthResult.Error.InvalidPassword
         val tokenModel = userDomain.toTokenModel()
         val token = JwtConfig.generateToken(tokenModel)
+        userDomain.toTokenModel()
         return AuthResult.Success(userDomain.toPresentation(token))
     }
 

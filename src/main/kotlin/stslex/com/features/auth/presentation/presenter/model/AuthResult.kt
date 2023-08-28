@@ -1,7 +1,7 @@
 package stslex.com.features.auth.presentation.presenter.model
 
 import io.ktor.http.*
-import stslex.com.features.auth.presentation.model.respond.AuthUserRespond
+import stslex.com.features.auth.presentation.model.respond.AuthUserResponse
 import stslex.com.model.ApiError
 import stslex.com.model.ApiErrorRespond
 
@@ -11,8 +11,8 @@ sealed class AuthResult<out T>(
 ) {
 
     data class Success(
-        override val data: AuthUserRespond
-    ) : AuthResult<AuthUserRespond>(
+        override val data: AuthUserResponse
+    ) : AuthResult<AuthUserResponse>(
         statusCode = HttpStatusCode.OK,
         data = data
     )
