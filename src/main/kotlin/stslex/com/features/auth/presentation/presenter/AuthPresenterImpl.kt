@@ -30,7 +30,9 @@ class AuthPresenterImpl(
         val userDomain = interactor.getUserByUsername(
             username = user.username
         ) ?: return AuthResult.Error.UserIsNotExist
-        if (userDomain.password != user.password) return AuthResult.Error.InvalidPassword
+        if (userDomain.password != user.password) {
+            return AuthResult.Error.InvalidPassword
+        }
         val tokenModel = userDomain.toTokenModel()
         val token = tokenGenerator.generateToken(tokenModel)
         return AuthResult.Success(
@@ -42,7 +44,15 @@ class AuthPresenterImpl(
         uuid: String
     ): UserTokenModel? = interactor.getUserByUuid(uuid)?.toTokenModel()
 
-    override suspend fun isUserExist(
-        uuid: String
-    ): Boolean = interactor.getUserByUuid(uuid) != null
+    override suspend fun isUserValid(
+        uuid: String,
+        username: String,
+        password: String
+    ): Boolean = interactor
+        .getUserByUuid(uuid)
+        ?.let { user ->
+            user.username == username &&
+                    user.password == password
+        }
+        ?: false
 }

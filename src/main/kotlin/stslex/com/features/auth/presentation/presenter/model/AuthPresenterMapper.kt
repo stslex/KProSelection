@@ -20,6 +20,7 @@ fun UserAuthDomainModel.toTokenModel(): UserTokenModel = UserTokenModel(
 fun UserAuthDomainModel.toPresentation(
     token: String
 ) = AuthUserResponse(
+    uuid = uuid,
     username = username,
     nickname = nickname,
     token = token

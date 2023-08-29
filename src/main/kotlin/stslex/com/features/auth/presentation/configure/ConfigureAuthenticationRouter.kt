@@ -9,17 +9,20 @@ import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 import stslex.com.features.auth.presentation.presenter.AuthPresenter
 import stslex.com.routing.RoutingExt
 
+private const val AUTH_END_POINT = "passport"
+private const val AUTH_PATH = "${RoutingExt.API_HOST}/${AUTH_END_POINT}"
+
 fun Routing.configureAuthenticationRouter(
     presenter: AuthPresenter
 ) {
     authenticate(AuthConfigType.DEFAULT.configName) {
-        post("${RoutingExt.API_HOST}/passport/register") {
+        post("$AUTH_PATH/registration") {
             val user = call.receive<UserAuthRequest>()
             val result = presenter.register(user)
             call.respond(result.statusCode, result.data)
         }
 
-        post("${RoutingExt.API_HOST}/passport/auth") {
+        post("$AUTH_PATH/login") {
             val user = call.receive<UserAuthRequest>()
             val result = presenter.auth(user)
             call.respond(result.statusCode, result.data)

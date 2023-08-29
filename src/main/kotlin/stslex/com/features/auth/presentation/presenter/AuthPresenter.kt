@@ -13,5 +13,9 @@ interface AuthPresenter {
 
     suspend fun getUserTokenModel(uuid: String): UserTokenModel?
 
-    suspend fun isUserExist(uuid: String): Boolean
+    suspend fun isUserValid(
+        uuid: String,
+        username: String,
+        password: String
+    ): Boolean
 }

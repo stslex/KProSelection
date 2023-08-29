@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthUserResponse(
+    @SerialName("uuid")
+    val uuid: String,
     @SerialName("username")
     val username: String,
     @SerialName("nickname")

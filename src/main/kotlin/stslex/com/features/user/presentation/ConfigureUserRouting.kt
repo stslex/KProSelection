@@ -21,7 +21,10 @@ private const val USER_PATH = "${RoutingExt.API_HOST}/$USER_END_POINT"
 fun Routing.routingUser() {
     val interactor by inject<UserInteractor>()
 
-    authenticate(AuthConfigType.JWT_TOKEN_AUTH.configName) {
+    authenticate(
+        AuthConfigType.JWT_TOKEN_AUTH.configName,
+        AuthConfigType.DEFAULT.configName
+    ) {
 
         get("$USER_PATH/list") {
             val items = interactor.getAll(
