@@ -3,7 +3,7 @@ package stslex.com.features.auth.presentation.presenter
 import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 import stslex.com.features.auth.presentation.presenter.model.AuthResult
 import stslex.com.features.auth.presentation.presenter.model.RegisterResult
-import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
+import stslex.com.features.auth.presentation.token.UserTokenModel
 
 interface AuthPresenter {
 
@@ -12,4 +12,6 @@ interface AuthPresenter {
     suspend fun auth(user: UserAuthRequest): AuthResult<Any>
 
     suspend fun getUserTokenModel(uuid: String): UserTokenModel?
+
+    suspend fun isUserExist(uuid: String): Boolean
 }

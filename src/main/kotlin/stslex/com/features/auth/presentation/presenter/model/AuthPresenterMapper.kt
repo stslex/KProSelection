@@ -2,8 +2,8 @@ package stslex.com.features.auth.presentation.presenter.model
 
 import stslex.com.features.auth.domain.model.RegisterDomainResult
 import stslex.com.features.auth.domain.model.UserAuthDomainModel
-import stslex.com.features.auth.presentation.model.respond.AuthUserResponse
-import stslex.com.features.auth.presentation.utils.token.model.UserTokenModel
+import stslex.com.features.auth.presentation.model.response.AuthUserResponse
+import stslex.com.features.auth.presentation.token.UserTokenModel
 
 fun RegisterDomainResult.toPresentation() = when (this) {
     is RegisterDomainResult.SaveUserError -> RegisterResult.Error.SaveUserError

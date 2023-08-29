@@ -2,6 +2,7 @@ package stslex.com.features.auth.presentation.presenter.model
 
 import io.ktor.http.*
 import stslex.com.model.ApiError
+import stslex.com.model.ApiError.Authentication
 import stslex.com.model.ApiError.Authentication.InvalidPasswordFormat
 import stslex.com.model.ApiError.Authentication.SaveUser
 import stslex.com.model.ApiErrorRespond
@@ -26,7 +27,9 @@ sealed class RegisterResult<out T>(
 
         data object InvalidPassword : Error(InvalidPasswordFormat)
 
-        data object UserIsExist : Error(ApiError.Authentication.UserIsExist)
+        data object InvalidUsername : Error(Authentication.InvalidUsername)
+
+        data object UserIsExist : Error(Authentication.UserIsExist)
 
         data object SaveUserError : Error(SaveUser)
     }

@@ -6,7 +6,11 @@ import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import stslex.com.datasources.user.table.DatabaseFactory.initDatabase
-import stslex.com.plugins.*
+import stslex.com.features.auth.presentation.configure.configureAuthenticationFeature
+import stslex.com.plugins.configureDI
+import stslex.com.plugins.configureRouting
+import stslex.com.plugins.configureSerialization
+import stslex.com.plugins.configureTemplating
 
 fun main() {
     embeddedServer(
@@ -23,7 +27,7 @@ fun Application.module() {
     initDatabase()
     configureSerialization()
     configureTemplating()
-    configureAuthentication()
+    configureAuthenticationFeature()
     configureRouting()
 }
 

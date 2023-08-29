@@ -9,7 +9,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.*
 import org.koin.ktor.ext.inject
-import stslex.com.features.auth.presentation.plugin.AuthConfig
+import stslex.com.features.auth.presentation.configure.AuthConfigType
 import stslex.com.features.user.domain.UserInteractor
 import stslex.com.features.user.presentation.model.UserUpdateResponse
 import stslex.com.features.user.presentation.model.toRespond
@@ -21,7 +21,7 @@ private const val USER_PATH = "${RoutingExt.API_HOST}/$USER_END_POINT"
 fun Routing.routingUser() {
     val interactor by inject<UserInteractor>()
 
-    authenticate(AuthConfig.JWT_TOKEN_AUTH.configName) {
+    authenticate(AuthConfigType.JWT_TOKEN_AUTH.configName) {
 
         get("$USER_PATH/list") {
             val items = interactor.getAll(
