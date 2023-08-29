@@ -1,6 +1,6 @@
-package stslex.com.features.auth.presentation.plugin
+package stslex.com.features.auth.presentation.configure
 
-enum class AuthConfig(
+enum class AuthConfigType(
     val configName: String,
     val realm: String
 ) {

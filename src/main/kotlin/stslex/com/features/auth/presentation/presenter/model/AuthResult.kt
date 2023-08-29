@@ -1,7 +1,7 @@
 package stslex.com.features.auth.presentation.presenter.model
 
 import io.ktor.http.*
-import stslex.com.features.auth.presentation.model.respond.AuthUserResponse
+import stslex.com.features.auth.presentation.model.response.AuthUserResponse
 import stslex.com.model.ApiError
 import stslex.com.model.ApiErrorRespond
 

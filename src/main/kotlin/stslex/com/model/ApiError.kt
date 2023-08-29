@@ -79,6 +79,12 @@ sealed class ApiError(
             messageCode = 103,
             message = "Couldn't find user with this username"
         )
+
+        data object InvalidUsername : Authentication(
+            statusCode = HttpStatusCode.LengthRequired,
+            messageCode = 104,
+            message = "username is invalid"
+        )
     }
 }
 

@@ -1,4 +1,4 @@
-package stslex.com.features.auth.presentation.utils.token.model
+package stslex.com.features.auth.presentation.token
 
 data class UserTokenModel(
     val uuid: String,
