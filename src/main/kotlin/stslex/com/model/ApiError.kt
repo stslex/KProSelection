@@ -83,7 +83,7 @@ sealed class ApiError(
         data object InvalidUsername : Authentication(
             statusCode = HttpStatusCode.LengthRequired,
             messageCode = 104,
-            message = "username is invalid"
+            message = "Username is invalid"
         )
     }
 }

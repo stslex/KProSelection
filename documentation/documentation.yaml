@@ -12,17 +12,35 @@ servers:
 
 components:
   schemas:
-    TokenRespond:
+    UserAuthRequest:
       properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AuthUserResponse:
+      properties:
+        uuid:
+          type: string
+        username:
+          type: string
+        nikname:
+          type: string
         token:
           type: string
 
-    HelloRespond:
+    ApiKeyHeader:
+      properties:
+        x-api-key:
+          type: string
+
+    HelloResponse:
       properties:
         text:
           type: string
 
-    ErrorRespond:
+    ErrorResponse:
       properties:
         messageCode:
           type: integer
@@ -30,48 +48,105 @@ components:
           type: string
 
 paths:
-  /token:
+  /passport/registration:
     get:
       tags:
-        - Auth
-        - Token
-      summary: Token generaion
-      description: Generate token
+        - Authentication
+      summary: registration
+      description: registration
       parameters:
-        - name: "API_KEY"
+        - name: "api"
           in: header
           required: true
-          description: to get test token put "test" value
+          description: to get access to main functionality,
+          schema: {
+            $ref: '#/components/schemas/ApiKeyHeader'
+          }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthRequest'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: |
+            Unauthorized \
+            messageCode = 2 \
+            message = "Api Key is Invalid"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '411':
+          description: |
+            Invalid password or username format \
+            messageCode = 102, message = "Password not in right format" \
+            messageCode = 104, message = "Username is invalid"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: |
+            Conflict \
+            messageCode = 103 \
+            message = "User with this username is already exist"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: |
+            Internal Server Error \
+            messageCode = 100 \
+            message = "Error while saving user, try again later"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
-        - name: "DEVICE_ID"
+  /passport/login:
+    get:
+      tags:
+        - Authentication
+      summary: authentication
+      description: authentication
+      parameters:
+        - name: "api"
           in: header
           required: true
-          description: to get test token put "test" value
-
-        - name: "TOKEN"
-          in: header
-          required: false
-
-        - name: "UUID"
-          in: header
-          required: false
+          description: to get access to main functionality,
+          schema: {
+            $ref: '#/components/schemas/ApiKeyHeader'
+          }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenRespond'
-        '400':
+                $ref: '#/components/schemas/AuthUserResponse'
+        '412':
           description: |
-            UNAUTHORIZED \
-            messageCode = 1, message = "Token is Invalid or has been expired" \
-            messageCode = 2, message = "Api Key is Invalid" \
-            messageCode = 3, message = "Device Id is Invalid"
+            PreconditionFailed \
+            messageCode = "101"
+            message = "Password is not valid"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorRespond'
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: |
+            Conflict \
+            messageCode = 103 \
+            message = "User with this username is already exist"
 
   /hello:
     get:
@@ -85,7 +160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HelloRespond'
+                $ref: '#/components/schemas/HelloResponse'
 
 
   /hello/{username}:
@@ -100,7 +175,8 @@ paths:
       parameters:
         - name: username
           in: path
-          required: false
+          required: true
+          schema: { }
 
       responses:
         '200':
@@ -108,4 +184,4 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HelloRespond'
+                $ref: '#/components/schemas/HelloResponse'

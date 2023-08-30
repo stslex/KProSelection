@@ -3,7 +3,6 @@ package stslex.com.features.user.presentation
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -14,6 +13,7 @@ import stslex.com.features.user.domain.UserInteractor
 import stslex.com.features.user.presentation.model.UserUpdateResponse
 import stslex.com.features.user.presentation.model.toRespond
 import stslex.com.routing.RoutingExt
+import stslex.com.utils.payload_uuid
 
 private const val USER_END_POINT = "user"
 private const val USER_PATH = "${RoutingExt.API_HOST}/$USER_END_POINT"
@@ -35,8 +35,9 @@ fun Routing.routingUser() {
         }
 
         get("$USER_PATH/{uuid}") {
-            val uuid = call.parameters["uuid"]
-            val user = uuid?.let { interactor.getUser(it) }?.toRespond()
+            val user = payload_uuid
+                ?.let { interactor.getUser(it) }
+                ?.toRespond()
             if (user == null) {
                 call.respond(HttpStatusCode.NotFound)
             } else {
@@ -46,9 +47,9 @@ fun Routing.routingUser() {
 
         put("$USER_PATH/update") {
             val request = call.receive<UserUpdateResponse>()
-            val uuid = call.authentication.principal<JWTPrincipal>()?.jwtId
+            val uuid = payload_uuid
             if (uuid == null) {
-                call.respond(HttpStatusCode.Unauthorized, "uuid should be empty")
+                call.respond(HttpStatusCode.NotFound)
                 return@put
             }
             try {
