@@ -15,6 +15,7 @@ fun Application.configureSerialization() {
                 isLenient = true
                 ignoreUnknownKeys = true
                 explicitNulls = false
+                removeIgnoredType(String::class)
             }
         )
     }
