@@ -49,7 +49,7 @@ components:
 
 paths:
   /passport/registration:
-    get:
+    post:
       tags:
         - Authentication
       summary: registration
@@ -108,7 +108,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
   /passport/login:
-    get:
+    post:
       tags:
         - Authentication
       summary: authentication
