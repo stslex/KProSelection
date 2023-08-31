@@ -2,7 +2,7 @@ package stslex.com.features.user.domain.model
 
 import stslex.com.datasources.user.model.UserEntity
 import stslex.com.datasources.user.model.UserUpdateEntity
-import stslex.com.features.user.presentation.model.UserUpdateResponse
+import stslex.com.features.user.presentation.model.UserUpdateRequest
 
 fun UserEntity.toDomain() = UserDomainModel(
     uuid = uuid,
@@ -10,4 +10,4 @@ fun UserEntity.toDomain() = UserDomainModel(
     nickname = nickname
 )
 
-fun UserUpdateResponse.toEntity() = UserUpdateEntity(nickname = nickname)
+fun UserUpdateRequest.toEntity() = UserUpdateEntity(nickname = nickname)

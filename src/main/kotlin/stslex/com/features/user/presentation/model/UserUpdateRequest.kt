@@ -4,9 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserRespond(
-    @SerialName("username")
-    val username: String,
+data class UserUpdateRequest(
     @SerialName("nickname")
     val nickname: String
 )

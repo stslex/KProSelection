@@ -1,7 +1,7 @@
 package stslex.com.features.user.domain
 
 import stslex.com.features.user.domain.model.UserDomainModel
-import stslex.com.features.user.presentation.model.UserUpdateResponse
+import stslex.com.features.user.presentation.model.UserUpdateRequest
 
 interface UserInteractor {
 
@@ -11,6 +11,6 @@ interface UserInteractor {
 
     suspend fun updateFields(
         uuid: String,
-        update: UserUpdateResponse
+        update: UserUpdateRequest
     ): UserDomainModel
 }
