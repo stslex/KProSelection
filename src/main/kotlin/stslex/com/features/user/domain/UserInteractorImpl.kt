@@ -4,7 +4,7 @@ import stslex.com.datasources.user.datasource.UserDataSource
 import stslex.com.features.user.domain.model.UserDomainModel
 import stslex.com.features.user.domain.model.toDomain
 import stslex.com.features.user.domain.model.toEntity
-import stslex.com.features.user.presentation.model.UserUpdateResponse
+import stslex.com.features.user.presentation.model.UserUpdateRequest
 
 class UserInteractorImpl(
     private val dataSource: UserDataSource
@@ -27,7 +27,7 @@ class UserInteractorImpl(
 
     override suspend fun updateFields(
         uuid: String,
-        update: UserUpdateResponse
+        update: UserUpdateRequest
     ): UserDomainModel = dataSource.updateFields(
         uuid = uuid,
         update = update.toEntity()

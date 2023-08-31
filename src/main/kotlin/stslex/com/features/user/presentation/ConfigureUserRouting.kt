@@ -10,8 +10,8 @@ import io.ktor.util.*
 import org.koin.ktor.ext.inject
 import stslex.com.features.auth.presentation.configure.AuthConfigType
 import stslex.com.features.user.domain.UserInteractor
-import stslex.com.features.user.presentation.model.UserUpdateResponse
-import stslex.com.features.user.presentation.model.toRespond
+import stslex.com.features.user.presentation.model.UserUpdateRequest
+import stslex.com.features.user.presentation.model.toResponse
 import stslex.com.routing.RoutingExt
 import stslex.com.utils.payload_uuid
 
@@ -30,14 +30,14 @@ fun Routing.routingUser() {
             val items = interactor.getAll(
                 page = call.attributes.getOrNull(AttributeKey("page_number")) ?: 0,
                 pageSize = call.attributes.getOrNull(AttributeKey("page_size")) ?: 10
-            ).toRespond()
+            ).toResponse()
             call.respond(items)
         }
 
         get("$USER_PATH/{uuid}") {
             val user = payload_uuid
                 ?.let { interactor.getUser(it) }
-                ?.toRespond()
+                ?.toResponse()
             if (user == null) {
                 call.respond(HttpStatusCode.NotFound)
             } else {
@@ -46,7 +46,7 @@ fun Routing.routingUser() {
         }
 
         put("$USER_PATH/update") {
-            val request = call.receive<UserUpdateResponse>()
+            val request = call.receive<UserUpdateRequest>()
             val uuid = payload_uuid
             if (uuid == null) {
                 call.respond(HttpStatusCode.NotFound)
@@ -58,7 +58,7 @@ fun Routing.routingUser() {
                         uuid = uuid,
                         update = request
                     )
-                    .toRespond()
+                    .toResponse()
                 call.respond(response)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
