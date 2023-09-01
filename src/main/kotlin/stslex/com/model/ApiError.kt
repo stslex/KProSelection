@@ -1,8 +1,6 @@
 package stslex.com.model
 
 import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
 
 sealed class ApiError(
     val statusCode: HttpStatusCode,
@@ -10,7 +8,7 @@ sealed class ApiError(
     val message: String,
 ) {
 
-    val data = ApiErrorRespond(
+    val data = ApiErrorResponse(
         messageCode = messageCode,
         message = message
     )
@@ -86,8 +84,10 @@ sealed class ApiError(
             message = "Username is invalid"
         )
     }
-}
 
-suspend fun ApplicationCall.respondError(error: ApiError) {
-    respond(error.statusCode, error.data)
+    data object InternalError : ApiError(
+        statusCode = HttpStatusCode.InternalServerError,
+        messageCode = 200,
+        message = "smth went wrong"
+    )
 }

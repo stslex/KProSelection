@@ -3,10 +3,9 @@ package stslex.com.features.auth.presentation.configure
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import stslex.com.features.auth.presentation.model.request.UserAuthRequest
 import stslex.com.features.auth.presentation.presenter.AuthPresenter
+import stslex.com.model.*
 import stslex.com.routing.RoutingExt
 
 private const val AUTH_END_POINT = "passport"
@@ -17,15 +16,15 @@ fun Routing.configureAuthenticationRouter(
 ) {
     authenticate(AuthConfigType.DEFAULT.configName) {
         post("$AUTH_PATH/registration") {
-            val user = call.receive<UserAuthRequest>()
-            val result = presenter.register(user)
-            call.respond(result.statusCode, result.data)
+            presenter.register(call.receive())
+                .onSuccess(call::respondCreated)
+                .onError(call::respondError)
         }
 
         post("$AUTH_PATH/login") {
-            val user = call.receive<UserAuthRequest>()
-            val result = presenter.auth(user)
-            call.respond(result.statusCode, result.data)
+            presenter.auth(call.receive())
+                .onSuccess(call::respondAccept)
+                .onError(call::respondError)
         }
     }
 }

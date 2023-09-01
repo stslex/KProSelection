@@ -15,6 +15,8 @@ import stslex.com.features.auth.presentation.token.TokenGenerator
 import stslex.com.features.auth.presentation.token.TokenGeneratorImpl
 import stslex.com.features.user.domain.UserInteractor
 import stslex.com.features.user.domain.UserInteractorImpl
+import stslex.com.features.user.presentation.presenter.UserPresenter
+import stslex.com.features.user.presentation.presenter.UserPresenterImpl
 
 val koinModule = module {
     singleOf(::UserDataSourceImpl) { bind<UserDataSource>() }
@@ -23,4 +25,5 @@ val koinModule = module {
     singleOf(::AuthPresenterImpl) { bind<AuthPresenter>() }
     singleOf(::TokenGeneratorImpl) { bind<TokenGenerator>() }
     singleOf(::UserInteractorImpl) { bind<UserInteractor>() }
+    singleOf(::UserPresenterImpl) { bind<UserPresenter>() }
 }
