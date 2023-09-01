@@ -12,14 +12,23 @@ import stslex.com.features.auth.presentation.configure.AuthConfigType
 import stslex.com.features.user.domain.UserInteractor
 import stslex.com.features.user.presentation.model.UserUpdateRequest
 import stslex.com.features.user.presentation.model.toResponse
+import stslex.com.features.user.presentation.presenter.UserPresenter
+import stslex.com.model.onError
+import stslex.com.model.onSuccess
+import stslex.com.model.respondError
+import stslex.com.model.respondOK
 import stslex.com.routing.RoutingExt
 import stslex.com.utils.payload_uuid
 
 private const val USER_END_POINT = "user"
 private const val USER_PATH = "${RoutingExt.API_HOST}/$USER_END_POINT"
 
+private const val PAGE_NUMBER_ATTRIBUTE = "page_number"
+private const val PAGE_SIZE_ATTRIBUTE = "page_size"
+
 fun Routing.routingUser() {
     val interactor by inject<UserInteractor>()
+    val presenter by inject<UserPresenter>()
 
     authenticate(
         AuthConfigType.JWT_TOKEN_AUTH.configName,
@@ -27,11 +36,13 @@ fun Routing.routingUser() {
     ) {
 
         get("$USER_PATH/list") {
-            val items = interactor.getAll(
-                page = call.attributes.getOrNull(AttributeKey("page_number")) ?: 0,
-                pageSize = call.attributes.getOrNull(AttributeKey("page_size")) ?: 10
-            ).toResponse()
-            call.respond(items)
+            presenter
+                .getUsers(
+                    page = call.attributes.getOrNull(AttributeKey(PAGE_NUMBER_ATTRIBUTE)),
+                    pageSize = call.attributes.getOrNull(AttributeKey(PAGE_SIZE_ATTRIBUTE))
+                )
+                .onSuccess(call::respondOK)
+                .onError(call::respondError)
         }
 
         get("$USER_PATH/{uuid}") {

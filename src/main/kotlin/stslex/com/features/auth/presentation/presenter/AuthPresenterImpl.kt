@@ -2,12 +2,14 @@ package stslex.com.features.auth.presentation.presenter
 
 import stslex.com.features.auth.domain.interactor.AuthInteractor
 import stslex.com.features.auth.presentation.model.request.UserAuthRequest
-import stslex.com.features.auth.presentation.presenter.model.AuthResult
-import stslex.com.features.auth.presentation.presenter.model.RegisterResult
+import stslex.com.features.auth.presentation.model.response.AuthUserResponse
 import stslex.com.features.auth.presentation.presenter.model.toPresentation
 import stslex.com.features.auth.presentation.presenter.model.toTokenModel
 import stslex.com.features.auth.presentation.token.TokenGenerator
 import stslex.com.features.auth.presentation.token.UserTokenModel
+import stslex.com.model.ApiError.Authentication.*
+import stslex.com.model.ApiResponse
+import stslex.com.model.MessageResponse
 
 class AuthPresenterImpl(
     private val interactor: AuthInteractor,
@@ -16,26 +18,26 @@ class AuthPresenterImpl(
 
     override suspend fun register(
         user: UserAuthRequest
-    ): RegisterResult<Any> {
+    ): ApiResponse<MessageResponse> {
         if (user.username.isBlank()) {
-            return RegisterResult.Error.InvalidUsername
+            return ApiResponse.Error(InvalidUsername)
         }
         if (user.password.isBlank()) {
-            return RegisterResult.Error.InvalidPassword
+            return ApiResponse.Error(InvalidPassword)
         }
         return interactor.register(user).toPresentation()
     }
 
-    override suspend fun auth(user: UserAuthRequest): AuthResult<Any> {
+    override suspend fun auth(user: UserAuthRequest): ApiResponse<AuthUserResponse> {
         val userDomain = interactor.getUserByUsername(
             username = user.username
-        ) ?: return AuthResult.Error.UserIsNotExist
+        ) ?: return ApiResponse.Error(UserIsNotExist)
         if (userDomain.password != user.password) {
-            return AuthResult.Error.InvalidPassword
+            return ApiResponse.Error(InvalidPassword)
         }
         val tokenModel = userDomain.toTokenModel()
         val token = tokenGenerator.generateToken(tokenModel)
-        return AuthResult.Success(
+        return ApiResponse.Success(
             data = userDomain.toPresentation(token)
         )
     }
